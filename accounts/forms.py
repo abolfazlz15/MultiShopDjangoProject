@@ -1,11 +1,11 @@
-from wsgiref.validate import validator
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from django.core.exceptions import ValidationError
 from django.core import validators
+from django.core.exceptions import ValidationError
+
 from .models import User
-from django.contrib.auth import password_validation
+
 
 class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -48,7 +48,7 @@ class LoginForm(forms.Form):
         user = authenticate(phone=self.cleaned_data.get('phone'), password=self.cleaned_data.get('password'))
         if user is not None:
             return self.cleaned_data.get('password')
-        raise ValidationError('نام کاربری یا رمز ورود اشتباه است', code='invalid_info')
+        raise ValidationError('username or password is wrong', code='invalid_info')
 
 
 class RegisterForm(forms.Form):

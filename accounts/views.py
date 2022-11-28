@@ -13,7 +13,7 @@ from .models import OTPCode, User
 class UserLoginView(FormView):
     template_name = 'accounts/login.html'
     form_class = LoginForm
-    success_url = reverse_lazy('core:home')
+    success_url = reverse_lazy('accounts:login')
 
     def form_valid(self, form):
         data = form.cleaned_data
