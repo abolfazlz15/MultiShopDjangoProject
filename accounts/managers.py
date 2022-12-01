@@ -2,7 +2,7 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, phone, username, password=None):
+    def create_user(self, phone, full_name, email, password=None):
 
 
         if not phone:
@@ -10,7 +10,8 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             phone=phone,
-            username = username,
+            email=email,
+            full_name=full_name,
         )
 
         user.set_password(password)

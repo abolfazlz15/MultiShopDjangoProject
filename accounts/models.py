@@ -13,7 +13,6 @@ class User(PermissionsMixin, AbstractBaseUser):
         null=True, blank=True,
         unique=True,
     )
-    username = models.CharField(max_length=20, null=True, blank=True, unique=True, verbose_name='نام کاربری')
     full_name = models.CharField(max_length=40, null=True, blank=True, verbose_name='نام کامل')
     profile_image = models.ImageField(null=True, blank=True, upload_to='user_profile_image', verbose_name='عکس پروفایل')
     is_active = models.BooleanField(default=True, verbose_name='کاربر فعال')

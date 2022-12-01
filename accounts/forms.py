@@ -1,10 +1,11 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth.password_validation import validate_password
 from django.core import validators
 from django.core.exceptions import ValidationError
 
-from .models import User
+from .models import User, OTPCode
 
 
 class UserCreationForm(forms.ModelForm):
@@ -13,7 +14,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('phone', 'email', 'username')
+        fields = ('phone', 'email')
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -35,7 +36,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('phone', 'password', 'email', 'username', 'is_active', 'is_admin', 'is_superuser')
+        fields = ('phone', 'password', 'email', 'is_active', 'is_admin', 'is_superuser')
 
 
 class LoginForm(forms.Form):
@@ -52,32 +53,43 @@ class LoginForm(forms.Form):
 
 
 class RegisterForm(forms.Form):
-    phone = forms.CharField(widget= forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your phone'}), validators=[validators.MaxLengthValidator(11)])
-    # password1 = forms.CharField(widget=forms.PasswordInput(
-    #     attrs={'class': 'form-control', 'placeholder': 'enter your password'}), validators=[validators.MinLengthValidator(8)])
-    # password2 = forms.CharField(widget=forms.PasswordInput(
-    #     attrs={'class': 'form-control', 'placeholder': 'enter your password'})
-    # )
+    phone = forms.CharField(widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your phone'}), validators=[validators.MaxLengthValidator(11)])
+    email = forms.CharField(widget = forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'enter your email'}))
+    full_name = forms.CharField(widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your full name'}))
+    password = forms.CharField(widget = forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'enter password'}), validators=[validate_password])
+    password2 = forms.CharField(widget = forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'enter confirm password'}))
 
-    # def clean_password1(self):
-    #     password1 = self.cleaned_data.get('password1')
-    #     try:
-    #         password_validation.validate_password(password1)
-    #     except forms.ValidationError as error:
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        user = User.objects.filter(phone=phone)
+        if user:
+            raise ValidationError('This number has already been registered')
+        return phone
 
-    #         self.add_error('password1', error)
-    #     return password1
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        user = User.objects.filter(email=email)
+        if user:
+            raise ValidationError('This email has already been registered')
+        return email
 
-    # def clean_password2(self):
-    #     password1 = self.cleaned_data.get('password1')
-    #     password2 = self.cleaned_data.get('password2')
+    def clean_password2(self):
+        password = self.cleaned_data.get('password')
+        password2 = self.cleaned_data.get('password2')
 
-    #     if password1 != password2:
-    #         raise ValidationError('رمز ورود با تکرار رمزورود برابر نیست', code='invalid_info')
+        if password != password2:
+            raise forms.ValidationError(
+                "password and confirm password does not match"
+            )
 
+        return password2
 
-
-class CheackOTPForm(forms.Form):
+class CheckOTPForm(forms.Form):
     code = forms.CharField(widget= forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your code'}), validators=[validators.MaxLengthValidator(4)])
 
-
+    def clean_code(self):
+        code = self.cleaned_data['code']
+        otp_code = OTPCode.objects.filter(code=code)
+        if not otp_code:
+            raise ValidationError('this code not exist')
+        return code

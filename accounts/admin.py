@@ -9,23 +9,23 @@ class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('showImage', 'username', 'phone', 'email', 'full_name', 'is_admin')
+    list_display = ('showImage', 'phone', 'email', 'full_name', 'is_admin')
     list_filter = ('is_admin', 'is_active', 'is_superuser')
     fieldsets = (
         (None, {'fields': ('phone', 'password')}),
-        ('Personal info', {'fields': ('email', 'username', 'full_name')}),
+        ('Personal info', {'fields': ('email', 'full_name')}),
         ('Permissions', {'fields': ('is_superuser', 'is_admin', 'is_active')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('phone', 'email', 'username', 'date_of_birth', 'password1', 'password2'),
+            'fields': ('phone', 'email', 'date_of_birth', 'password1', 'password2'),
         }),
     )
-    search_fields = ('email', 'phone', 'username', 'full_name')
-    ordering = ('username',)
-    list_display_links = ('showImage', 'username', 'phone', 'email', 'full_name', 'is_admin')
+    search_fields = ('email', 'phone', 'full_name')
+    ordering = ('full_name',)
+    list_display_links = ('showImage', 'phone', 'email', 'full_name', 'is_admin')
     filter_horizontal = ()
 
     def get_form(self, request, obj=None, **kwargs):
