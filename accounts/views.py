@@ -1,6 +1,7 @@
 from random import randint
 
 from django.contrib.auth import login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
@@ -55,10 +56,11 @@ class CheckOTPView(View):
                 login(request, user)
                 otp.delete()
                 return redirect('accounts:login')
-            else:
-                form.er('code', 'invalid data2')
-        else:
-            form.add_error('code', 'invalid data')
 
         return render(request, 'accounts/check_otp.html', {'form': form})
-    
+
+
+class LogoutView(LoginRequiredMixin, View):
+    def get(self, request):
+        logout(request)
+        return redirect('accounts:login')
