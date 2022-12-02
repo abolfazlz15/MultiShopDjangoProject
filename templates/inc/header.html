@@ -15,8 +15,19 @@
                     <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My
                         Account</button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <button class="dropdown-item" type="button">Sign in</button>
-                        <button class="dropdown-item" type="button">Sign up</button>
+                        
+                        {% if request.user.is_authenticated %}
+                            <button class="dropdown-item" type="button">Profile({{ request.user.phone }})</button>
+                            <a href="{% url 'accounts:logout' %}">
+                                <button class="dropdown-item" type="button">Log out</button>
+                            </a>
+                        {% else %}
+                        <a href="{% url 'accounts:login' %}">
+                            <button class="dropdown-item" type="button">Sign in</button>
+                        </a>
+                            <button class="dropdown-item" type="button">Sign up</button>
+                        {% endif %}
+                            
                     </div>
                 </div>
                 <div class="btn-group mx-2">

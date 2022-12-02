@@ -1,11 +1,10 @@
 from django import forms
-from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.password_validation import validate_password
 from django.core import validators
 from django.core.exceptions import ValidationError
 
-from .models import User, OTPCode
+from .models import OTPCode, User
 
 
 class UserCreationForm(forms.ModelForm):
@@ -40,24 +39,23 @@ class UserChangeForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    phone = forms.CharField(widget= forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your phone'}), validators=[validators.MaxLengthValidator(11)])
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your phone or email'}))
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'enter your password'})
     )
 
-    def clean_password(self):
-        user = authenticate(phone=self.cleaned_data.get('phone'), password=self.cleaned_data.get('password'))
-        if user is not None:
-            return self.cleaned_data.get('password')
-        raise ValidationError('username or password is wrong', code='invalid_info')
-
 
 class RegisterForm(forms.Form):
-    phone = forms.CharField(widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your phone'}), validators=[validators.MaxLengthValidator(11)])
-    email = forms.CharField(widget = forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'enter your email'}))
-    full_name = forms.CharField(widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your full name'}))
-    password = forms.CharField(widget = forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'enter password'}), validators=[validate_password])
-    password2 = forms.CharField(widget = forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'enter confirm password'}))
+    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your phone'}),
+                            validators=[validators.MaxLengthValidator(11), validators.MinLengthValidator(11)])
+    email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'enter your email'}))
+    full_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your full name'}))
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'enter password'}),
+        validators=[validate_password])
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'enter confirm password'}))
 
     def clean_phone(self):
         phone = self.cleaned_data['phone']
@@ -84,8 +82,10 @@ class RegisterForm(forms.Form):
 
         return password2
 
+
 class CheckOTPForm(forms.Form):
-    code = forms.CharField(widget= forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your code'}), validators=[validators.MaxLengthValidator(4)])
+    code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your code'}),
+                           validators=[validators.MaxLengthValidator(4)])
 
     def clean_code(self):
         code = self.cleaned_data['code']

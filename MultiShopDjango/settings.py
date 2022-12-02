@@ -30,6 +30,7 @@ INSTALLED_APPS = [
 
     # my app
     'accounts.apps.AccountsConfig',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -119,3 +120,7 @@ MEDIA_ROOT = path.join(BASE_DIR, "media")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'accounts.authentication.EmailAuthenticateBackend',
+]

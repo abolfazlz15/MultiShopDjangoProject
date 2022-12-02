@@ -1,14 +1,17 @@
 from random import randint
 
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import FormView, View
 
 from .forms import CheckOTPForm, LoginForm, RegisterForm
 from .models import OTPCode, User
+from django.contrib.auth import authenticate
 
 
 class UserLoginView(FormView):
@@ -18,8 +21,11 @@ class UserLoginView(FormView):
 
     def form_valid(self, form):
         data = form.cleaned_data
-        user = User.objects.get(phone=data['phone'])
-        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        user = authenticate(username=data['username'], password=data['password'])
+        if  user is not None:
+            login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        else:
+            messages.add_message(self.request, messages.ERROR, 'your phone|email or password is worng')
         return super().form_valid(form)
 
 
@@ -31,13 +37,15 @@ class UserRegisterView(FormView):
         randcode = randint(1000, 9999)
         data = form.cleaned_data
         OTPCode.objects.create(phone=data['phone'], code=randcode)
-        cache.set(key='register', value={'phone': data['phone'], 'email': data['email'], 'password': data['password'], 'full_name': data['full_name'], 'code': randcode}, timeout=300)
+        cache.set(key='register', value={'phone': data['phone'], 'email': data['email'], 'password': data['password'],
+                                         'full_name': data['full_name'], 'code': randcode}, timeout=300)
         print(randcode)
         return redirect('accounts:check-otp')
 
 
 class CheckOTPView(View):
     form_class = CheckOTPForm
+
     def get(self, request):
         form = self.form_class()
         return render(request, 'accounts/check_otp.html', {'form': form})
@@ -48,14 +56,26 @@ class CheckOTPView(View):
             data = form.cleaned_data
             data_cache = cache.get(key='register')
 
-            if OTPCode.objects.filter(code=data['code'], phone=data_cache['phone']).exists():
+            try:
                 otp = OTPCode.objects.get(code=data['code'], phone=data_cache['phone'])
+                expiration_date = otp.expiration_date + timezone.timedelta(minutes=2)
+                if expiration_date < timezone.now():
+                    otp.delete()
+                    messages.add_message(request, messages.WARNING, 'Your code verification time is over')
+                    return render(request, 'accounts/check_otp.html', {'form': form})
 
-                user = User.objects.create_user(phone=data_cache['phone'], email=data_cache['email'], full_name=data_cache['full_name'], password=data_cache['password'])
+                elif OTPCode.objects.filter(code=data['code'], phone=data_cache['phone']).exists():
 
-                login(request, user)
-                otp.delete()
-                return redirect('accounts:login')
+                    user = User.objects.create_user(phone=data_cache['phone'], email=data_cache['email'],
+                                                    full_name=data_cache['full_name'], password=data_cache['password'])
+
+                    login(request, user)
+                    otp.delete()
+                    return redirect('accounts:login')
+
+            except:
+                messages.add_message(request, messages.ERROR, 'Your code is not valid')
+                return render(request, 'accounts/check_otp.html', {'form': form})
 
         return render(request, 'accounts/check_otp.html', {'form': form})
 

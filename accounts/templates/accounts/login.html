@@ -15,13 +15,20 @@
                         {% for error in form.non_field_errors %}
                             <p class="alert alert-danger">{{ error }}</p>
                         {% endfor %}
-                            
+
+                        {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <p class="alert alert-danger">{{ message }}</p>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                         {% csrf_token %}
                         <div class="control-group">
-                            {{ form.phone }}
+                            {{ form.username }}
                             <p class="help-block text-danger"></p>
                         </div>
-                        {% for error in form.phone.errors %}
+                        {% for error in form.username.errors %}
                         <p class="alert alert-danger">{{ error }}</p>
                         {% endfor %}
                         <div class="control-group">
