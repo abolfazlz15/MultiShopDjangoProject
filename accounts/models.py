@@ -21,7 +21,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'phone'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = 'کاربر'
