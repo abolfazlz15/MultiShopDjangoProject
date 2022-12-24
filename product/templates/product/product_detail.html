@@ -111,16 +111,29 @@
                             </div>
                             <div class="tab-pane fade" id="tab-pane-3">
                                 <div class="row">
+                                    
                                     <div class="col-md-6">
+
                                         <h4 class="mb-4">1 review for "Product Name"</h4>
-                                        <div class="media mb-4">
-                                            <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
-                                            <div class="media-body">
-                                                <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
-                                                <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
+                                        {% for comment in comments %}
+                                            <div class="media mb-4">
+                                                
+                                                {% if comment.user.profile_image %}
+                                                    <img src="{{ comment.user.profile_image.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                                {% else %}
+                                                    <img src="{% static 'img/user_prof.png' %}" alt="test" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                                {% endif %}
+                                                    
+                                                <div class="media-body">
+                                                    <h6>{{ comment.user.full_name }}<small> - <i>{{ comment.created_at|timesince }}</i></small></h6>
+                                                    <p>{{ comment.text }}</p>
+                                                </div>
                                             </div>
-                                        </div>
+                                        {% endfor %}
+
                                     </div>
+                                        
+
                                     <div class="col-md-6">
                                         <h4 class="mb-4">Leave a review</h4>
                                         <small>Your email address will not be published. Required fields are marked *</small>

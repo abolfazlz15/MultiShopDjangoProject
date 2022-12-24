@@ -6,7 +6,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.html import format_html
-
+from accounts.models import User
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -82,9 +82,22 @@ class Product(models.Model):
 
     showImage.short_description = 'product image'
 
+
 class InformationProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='informations', blank=True, null=True)
     text = RichTextField()
 
     def __str__(self):
         return self.text[:15]
+
+
+class Comment(models.Model):
+    text = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user} - {self.text[:40]}'

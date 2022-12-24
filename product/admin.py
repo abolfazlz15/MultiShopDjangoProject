@@ -6,6 +6,7 @@ admin.site.register(models.Category)
 admin.site.register(models.ProductColor)
 admin.site.register(models.ProductSize)
 admin.site.register(models.ProductImage)
+admin.site.register(models.Comment)
 
 
 class InformationProduct(admin.StackedInline):

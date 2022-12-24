@@ -3,6 +3,7 @@
 
 # my ignore
 theme/
+note_for_me.txt
 ### Django ###
 *.log
 *.pot
