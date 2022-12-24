@@ -5,12 +5,16 @@ from ckeditor.fields import RichTextField
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from django.utils.html import format_html
 
 
 def get_file_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = '%s.%s' % (uuid.uuid4(), ext)
     return os.path.join('product', filename)
+
+
+
 
 
 class Category(models.Model):
@@ -67,5 +71,20 @@ class Product(models.Model):
         self.slug = slugify(self.title)
         super(Product, self).save()
 
-    # def get_absolute_url(self):
-    #     return reverse('blog:details', kwargs={'slug': self.slug})
+    def get_absolute_url(self):
+        return reverse('blog:details', kwargs={'pk': self.id, 'slug': self.slug})
+
+    def showImage(self):
+        if self.active_image:
+            return format_html(f'<img src="{self.active_image.url}" alt="" width="50px" height="50px">')
+        else:
+            return format_html('no image')
+
+    showImage.short_description = 'product image'
+
+class InformationProduct(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='informations', blank=True, null=True)
+    text = RichTextField()
+
+    def __str__(self):
+        return self.text[:15]

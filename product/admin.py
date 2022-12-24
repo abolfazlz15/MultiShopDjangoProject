@@ -1,16 +1,27 @@
 from django.contrib import admin
-from product.models import Product, Category, ProductColor, ProductSize, ProductImage
+
+from product import models
+
+admin.site.register(models.Category)
+admin.site.register(models.ProductColor)
+admin.site.register(models.ProductSize)
+admin.site.register(models.ProductImage)
 
 
-admin.site.register(Product)
-admin.site.register(Category)
-admin.site.register(ProductColor)
-admin.site.register(ProductSize)
-admin.site.register(ProductImage)
+class InformationProduct(admin.StackedInline):
+    model = models.InformationProduct
+    extra = 1
 
-# class PictureInline(modeladmin.StackedInline):
-#     model = Picture
-# class ProductAdmin(admin.ModelAdmin):
-#     inlines = [PictureInline]
 
-# admin.site.register(Product, ProductAdmin)
+class ProductAdminModel(admin.ModelAdmin):
+    fields = ['title', 'slug', 'description', 'active_image', 'image', 'price', 'status', 'category', 'size']
+    list_display = ('showImage', 'title', 'price', 'created','status')
+    list_display_links = ('showImage', 'title', 'price', 'created')
+    list_filter = ['status', 'created', 'updated']
+    inlines = [InformationProduct]
+
+    
+
+admin.site.register(models.Product, ProductAdminModel)
+admin.site.register(models.InformationProduct)
+

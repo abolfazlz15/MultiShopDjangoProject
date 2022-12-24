@@ -55,7 +55,7 @@
                             <strong class="text-dark mr-3">Colors:</strong>
                             <form>
                                 
-                                    {% for  color in product.color.all %}
+                                    {% for color in product.color.all %}
                                     <div class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" class="custom-control-input" id="{{ color }}" name="color">
                                         <label class="custom-control-label" for="{{ color }}">{{ color }}</label>
@@ -97,38 +97,16 @@
                                 <h4 class="mb-3">Additional Information</h4>
                                 <p> {{ product.description|safe }} </p>
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item px-0">
-                                                Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                                            </li>
-                                            <li class="list-group-item px-0">
-                                                Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                                            </li>
-                                            <li class="list-group-item px-0">
-                                                Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                                            </li>
-                                            <li class="list-group-item px-0">
-                                                Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
-                                            </li>
-                                          </ul> 
-                                    </div>
-                                    <div class="col-md-6">
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item px-0">
-                                                Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                                            </li>
-                                            <li class="list-group-item px-0">
-                                                Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                                            </li>
-                                            <li class="list-group-item px-0">
-                                                Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                                            </li>
-                                            <li class="list-group-item px-0">
-                                                Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
-                                            </li>
-                                          </ul> 
-                                    </div>
+                                    {% for information in product.informations.all %}
+                                        <div class="col-md-6">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item px-0">
+                                                    {{ information.text|safe }}
+                                                </li>
+                                            </ul> 
+                                        </div>
+                                    {% endfor %}
+                                    
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tab-pane-3">
