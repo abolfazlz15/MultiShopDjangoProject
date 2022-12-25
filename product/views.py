@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.views import generic
 from product.models import Product, Comment
 
@@ -13,3 +13,11 @@ class ProductDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         context['comments'] = Comment.objects.filter(status=True)
         return context
+
+    def post(self, request, pk, slug):
+        text = request.POST.get('message')
+        product = self.get_object()
+        parent_id = request.POST.get('parent_id')
+        user = request.user
+        Comment.objects.create(text=text, product=product, parent_id=parent_id, user=user)
+        return redirect('product:product_detail', self.get_object().id, self.get_object().slug)
