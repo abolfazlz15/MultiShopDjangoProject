@@ -127,6 +127,55 @@
                                                 <div class="media-body">
                                                     <h6>{{ comment.user.full_name }}<small> - <i>{{ comment.created_at|timesince }}</i></small></h6>
                                                     <p>{{ comment.text }}</p>
+                                                    
+                                                    {% for reply in comment.replies.all %}
+                                                        <div title="reply" id="commentreplyBtn"><i class="fa fa-reply"
+                                                                aria-hidden="true"></i> <span>Leave
+                                                                a reply
+                                                                for this review</span>
+                                                        </div>
+            
+                                                        <div title="reply" id="commentreplyBtn2"><i class="fa fa-reply"
+                                                                aria-hidden="true"></i> <span>Leave
+                                                                a reply
+                                                                for this review</span> </div>
+            
+                                                        <form id="commentreply">
+                                                            <div class="line"></div>
+                                                            <label for="cmreply">Your reply</label>
+                                                            <textarea name="cmreply" class="cmReply" id="cmreply" cols="30"
+                                                                rows="5"></textarea>
+                                                            <p>
+                                                                <label for="name">Your name</label>
+                                                                <input type="text" name="name" id="nameInput">
+                                                            </p>
+                                                            <p>0
+                                                                <label for="email">Your Email</label>
+                                                                <input type="text" name="email" id="emailInput">
+                                                            </p>
+            
+                                                            <button type="submit" class="commentreplySave">Leave your
+                                                                replay</button>
+                                                        </form>
+            
+            
+                                                        <div class="commentreplys">
+                                                            <h6>Comment replys</h6>
+                                                            <div class="cmreplys">
+                                                                {% if reply.user.profile_image %}
+                                                                <img src="{{ reply.user.profile_image.url }}" alt="user420" width="45" height="45" title="user420">
+                                                                {% else %}
+                                                                <img src="{% static 'img/user_prof.png' %}" alt="user420" width="45" height="45" title="user420">
+                                                                {% endif %}
+                                                                <h6>{{ reply.user.full_name }}</h6>-&nbsp;&nbsp;<i>{{ comment.created_at|timesince }}</i>
+                                                                <p>{{ reply.text }}</p>
+
+                                                            </div>
+                                                        </div>
+                                                {% endfor %}
+                                                        
+                                                    
+
                                                 </div>
                                             </div>
                                         {% endfor %}
