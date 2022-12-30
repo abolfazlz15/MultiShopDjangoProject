@@ -15,7 +15,7 @@ class InformationProduct(admin.StackedInline):
 
 
 class ProductAdminModel(admin.ModelAdmin):
-    fields = ['title', 'slug', 'description', 'active_image', 'image', 'price', 'status', 'category', 'size']
+    fields = ['title', 'slug', 'description', 'active_image', 'image', 'price', 'status', 'category', 'color', 'size']
     list_display = ('showImage', 'title', 'price', 'created','status')
     list_display_links = ('showImage', 'title', 'price', 'created')
     list_filter = ['status', 'created', 'updated']
