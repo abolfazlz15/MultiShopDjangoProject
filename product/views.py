@@ -1,7 +1,7 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
 
-from product.models import Comment, Product
+from product.models import Comment, Product, Category
 
 
 class ProductDetailView(generic.DetailView):
@@ -35,3 +35,13 @@ class ProductListView(generic.ListView):
         objects = super(ProductListView, self).get_queryset(*args, **kwargs)
         objects = objects.order_by("-id")
         return objects
+
+
+class CategoryList(generic.ListView):
+    template_name = 'videos/all-videos.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        category = get_object_or_404(Category, slug=slug)
+        return category.products.all()
