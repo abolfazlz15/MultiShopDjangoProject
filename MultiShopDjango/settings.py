@@ -30,7 +30,7 @@ INSTALLED_APPS = [
 
     # my apps
     'accounts.apps.AccountsConfig',
-    # 'core.apps.CoreConfig',
+    'core.apps.CoreConfig',
     'product.apps.ProductConfig',
 
     # helper apps
