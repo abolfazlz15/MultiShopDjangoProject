@@ -1,7 +1,8 @@
-from django.shortcuts import redirect, render, get_object_or_404
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 
-from product.models import Comment, Product, Category
+from product.models import Category, Comment, Product
 
 
 class ProductDetailView(generic.DetailView):
@@ -12,7 +13,8 @@ class ProductDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['comments'] = Comment.objects.filter(status=True).filter(parent=None).filter(product=self.get_object())
+        context['comments'] = Comment.objects.filter(status=True).filter(
+            parent=None).filter(product=self.get_object())
         return context
 
     def post(self, request, pk, slug):
@@ -34,6 +36,28 @@ class ProductListView(generic.ListView):
         objects = super(ProductListView, self).get_queryset(*args, **kwargs)
         objects = objects.order_by("-id")
         return objects
+
+
+class SearchProductView(generic.ListView):
+    model = Product
+    template_name = 'product/product_list.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        products = super().get_queryset()
+
+        q = self.request.GET.get('search')
+        print(Product.objects.filter(
+            Q(title__icontains=q) |
+            Q(description__icontains=q)
+        ).filter(status=True))
+        if q:
+            return Product.objects.filter(
+                Q(title__icontains=q) |
+                Q(category__title__icontains=q) |
+                Q(description__icontains=q)
+            ).filter(status=True)
+        return products
 
 
 class CategoryList(generic.ListView):
