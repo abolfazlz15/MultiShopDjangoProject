@@ -3,6 +3,7 @@
 
 
 {% block content %}
+
     <!-- Shop Detail Start -->
     <div class="container-fluid pb-5">
         <div class="row px-xl-5">
@@ -38,7 +39,8 @@
                     {% if product.size.all %}
                         <div class="d-flex mb-3">
                             <strong class="text-dark mr-3">Sizes:</strong>
-                            <form>
+                            <form method="post" action="{% url 'order:cart-add' product.id %}">
+                            {% csrf_token %}
 
                                 {% for size in product.size.all %}
                                     <div class="custom-control custom-radio custom-control-inline">
@@ -46,43 +48,40 @@
                                         <label class="custom-control-label" for="{{ size }}">{{ size }}</label>
                                     </div>
                                 {% endfor %}
-
-                            </form>
                         </div>
                     {% endif %}
                     {% if product.color.all %}
                         <div class="d-flex mb-4">
                             <strong class="text-dark mr-3">Colors:</strong>
-                            <form>
 
-                                {% for color in product.color.all %}
-                                    <div class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" class="custom-control-input" id="{{ color }}" name="color">
-                                        <label class="custom-control-label" for="{{ color }}">{{ color }}</label>
-                                    </div>
-                                {% endfor %}
 
-                            </form>
+                            {% for color in product.color.all %}
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" id="{{ color }}" name="color">
+                                    <label class="custom-control-label" for="{{ color }}">{{ color }}</label>
+                                </div>
+                            {% endfor %}
+
                         </div>
                     {% endif %}
                     <div class="d-flex align-items-center mb-4 pt-2">
                         <div class="input-group quantity mr-3" style="width: 130px;">
                             <div class="input-group-btn">
-                                <button class="btn btn-primary btn-minus">
+                                <button type="button" class="btn btn-primary btn-minus">
                                     <i class="fa fa-minus"></i>
                                 </button>
                             </div>
-                            <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
+                            {{ form.quantity }}
                             <div class="input-group-btn">
-                                <button class="btn btn-primary btn-plus">
+                                <button type="button" class="btn btn-primary btn-plus">
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
                         </div>
-                        <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To
-                            Cart
-                        </button>
+                        <button type="submit" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
                     </div>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -368,6 +367,25 @@
             document.getElementById('parent_id').value = id;
             window.location.href = '#comment'
 
+        }
+    </script>
+    <script>
+        let quantityButtons = document.querySelectorAll(".quantity button");
+        for (const button of quantityButtons) {
+            button.addEventListener("click", function () {
+                let input = button.parentElement.parentElement.querySelector("input");
+                let oldValue = input.value;
+
+                if (this.classList.contains("btn-plus")) {
+                    input.value = parseFloat(oldValue) + 1;
+                } else {
+                    if (oldValue > 1) {
+                        input.value = parseFloat(oldValue) - 1;
+                    } else {
+                        input.value = 1;
+                    }
+                }
+            });
         }
     </script>
 {% endblock content %}

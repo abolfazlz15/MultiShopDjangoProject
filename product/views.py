@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
-
+from order.forms import CartAddForm
 from product.models import Category, Comment, Product
 
 
@@ -15,6 +15,7 @@ class ProductDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         context['comments'] = Comment.objects.filter(status=True).filter(
             parent=None).filter(product=self.get_object())
+        context['form'] = CartAddForm()
         return context
 
     def post(self, request, pk, slug):

@@ -35,8 +35,6 @@ class ProductImage(models.Model):
     image = models.ImageField(blank=True, null=True, upload_to=get_file_path)
 
 
-
-
 class ProductColor(models.Model):
     tilte = models.CharField(max_length=50)
 
@@ -69,6 +67,7 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     is_status = ProductManger
+
     def __str__(self):
         return self.title
 
@@ -110,3 +109,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.user} - {self.text[:40]}'
+
+
+class CommentLike(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='likes')
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='likes')
+
+    def __str__(self):
+        return f'{self.user} - {self.product.title}'
