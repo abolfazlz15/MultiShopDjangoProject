@@ -12,55 +12,37 @@
                     <thead class="thead-dark">
                     <tr>
                         <th>Products</th>
-                        <th>Price</th>
+                        <th>title</th>
+                        <th>price</th>
                         <th>Quantity</th>
+                        <th>color</th>
+                        <th>size</th>
                         <th>Total</th>
                         <th>Remove</th>
                     </tr>
                     </thead>
                     <tbody class="align-middle">
-                    <tr>
+                    
 
                         {% for item in cart %}
-                            {% with product=item.product %}
-                                <td class="align-middle"><img src="
-                                        {% if product.active_image %}{{ product.active_image.url }}{% else %}{% static 'img/vendor-5.jpg' %}{% endif %}"
-                                                              alt=""
-                                                              style="width: 50px;">{{ product.title }}</td>
-                                <td class="align-middle">${{ item.price }}</td>
-
-                                <td class="align-middle">{{ item.quantity }}</td>
-                                <td class="align-middle">${{ item.price }}</td>
-                                <form method="post" action="{% url 'order:cart-delete' product.id %}">
-                                {% csrf_token %}
-                                    <td class="align-middle">
-                                        <button type="submit" class="btn btn-sm btn-danger"><i
-                                                class="fa fa-times"></i> </button>
-                                    </td>
-                                </form>
-                                <!-- <td class="align-middle">
-                                    <button class="btn btn-sm btn-danger"><i
-                                            class="fa fa-times"></i></button>
-                                </td> -->
-                            {% endwith %}
+                        <tr>
+                            <td class="align-middle"><img src="{% if item.product.active_image %}{{ item.product.active_image.url }}{% else %}{% static 'img/vendor-5.jpg' %}{% endif %}" alt="" style="width: 50px;"></td>
+                            <td class="align-middle">{{ item.product.title }}</td>
+                            <td class="align-middle">${{ item.price }}</td>
+                            <td class="align-middle">{{ item.quantity }}</td>
+                            <td class="align-middle">{{ item.color }}</td>
+                            <td class="align-middle">{{ item.size }}</td>
+                            <td class="align-middle">${{ item.total_price }}</td>
+                            <form method="post" action="{% url 'order:cart-delete' item.unique_id %}">
+                            {% csrf_token %}
+                                <td class="align-middle">
+                                    <button type="submit" class="btn btn-sm btn-danger"><i
+                                            class="fa fa-times"></i> </button>
+                                </td>
+                            </form>
+                        </tr>
                         {% endfor %}
 
-
-
-                        <!--
-                                                <td class="align-middle">
-                                                    <div class="input-group quantity mx-auto" style="width: 100px;">
-                                                         <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="1">
-
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle">$150</td>
-                                                <td class="align-middle">
-                                                    <button class="btn btn-sm btn-danger"><i
-                                                            class="fa fa-times"></i></button>
-                                                </td>
-                                            </tr>
-                        -->
                     </tbody>
                 </table>
             </div>

@@ -1,8 +1,8 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
+
 from order.cart import Cart
 from product.models import Product
-from order.forms import CartAddForm
 
 
 class CartDetailView(View):
@@ -16,17 +16,14 @@ class CartAddView(View):
     def post(self, request, product_id):
         cart = Cart(request)
         product = get_object_or_404(Product, id=product_id)
-        form = CartAddForm(request.POST)
-        if form.is_valid():
-            clean_data = form.cleaned_data
-            cart.add(product=product, quantity=clean_data['quantity'])
-            return redirect('product:product_detail', product.id, product.slug)
+        quantity , color, size = request.POST.get('quantity'), request.POST.get('color'), request.POST.get('size')
+        print(quantity, color, size)
+        cart.add(product, quantity, size, color)
         return redirect('product:product_detail', product.id, product.slug)
 
 
 class CartDeleteView(View):
-    def post(self, request, product_id):
+    def post(self, request, id):
         cart = Cart(request)
-        product = get_object_or_404(Product, id=product_id)
-        cart.remove(product)
+        cart.remove(id)
         return redirect('order:cart-detail')
