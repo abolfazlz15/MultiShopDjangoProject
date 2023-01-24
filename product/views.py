@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
+
 from product.models import Category, Comment, Product
 
 
@@ -46,10 +47,6 @@ class SearchProductView(generic.ListView):
         products = super().get_queryset()
 
         q = self.request.GET.get('search')
-        print(Product.objects.filter(
-            Q(title__icontains=q) |
-            Q(description__icontains=q)
-        ).filter(status=True))
         if q:
             return Product.objects.filter(
                 Q(title__icontains=q) |
