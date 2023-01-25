@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import FormView, View
 
-from .forms import CheckOTPForm, LoginForm, RegisterForm
+from .forms import CheckOTPForm, LoginForm, RegisterForm, AddAddressForm
 from .models import OTPCode, User
 from django.contrib.auth import authenticate
 
@@ -84,3 +84,18 @@ class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         return redirect('accounts:login')
+
+
+class AddAddressView(View):
+    def get(self, request):
+        form = AddAddressForm()
+        return render(request, 'accounts/add_address_form.html', context={'form': form})
+
+    def post(self, request):
+        form = AddAddressForm(request.POST)
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user = request.user
+            address.save()
+        return render(request, 'accounts/add_address_form.html', context={'form': form})
+

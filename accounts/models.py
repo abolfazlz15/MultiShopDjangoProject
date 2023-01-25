@@ -60,3 +60,16 @@ class OTPCode(models.Model):
 
     def __str__(self):
         return self.phone
+
+
+
+class UserAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
+    fullname = models.CharField(max_length=45)
+    address = models.TextField()
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=11)
+    zip_code = models.CharField(max_length=30)
+
+    def __str__(self):
+        return f'{self.fullname} - {self.user.phone}'

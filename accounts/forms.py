@@ -4,7 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import validators
 from django.core.exceptions import ValidationError
 
-from .models import OTPCode, User
+from .models import OTPCode, User, UserAddress
 
 
 class UserCreationForm(forms.ModelForm):
@@ -93,3 +93,17 @@ class CheckOTPForm(forms.Form):
         if not otp_code:
             raise ValidationError('this code not exist')
         return code
+
+
+class AddAddressForm(forms.ModelForm):
+    user = forms.IntegerField(required=False)
+    class Meta:
+        model = UserAddress
+        fields = '__all__'
+        widgets = {
+            'fullname': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'zip_code': forms.TextInput(attrs={'class': 'form-control'}),
+        }
