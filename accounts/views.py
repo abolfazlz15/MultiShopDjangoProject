@@ -97,5 +97,8 @@ class AddAddressView(View):
             address = form.save(commit=False)
             address.user = request.user
             address.save()
+            next_page = request.GET.get('next')
+            if next_page:
+                return redirect(next_page)
         return render(request, 'accounts/add_address_form.html', context={'form': form})
 
