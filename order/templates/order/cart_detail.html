@@ -71,11 +71,18 @@
                     <div class="pt-2">
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
-                            <h5>$160</h5>
+                            <h5>${{ cart.total }}</h5>
+                            <!-- {% if cart.total != None %}
+                               
+                            {% else %}
+                                <h5>$0</h5>
+                            {% endif %} -->
+                                
                         </div>
-                        <button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To
+                        <a href="{% url 'order:order-add' %}" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</a>
+                        <!-- <button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To
                             Checkout
-                        </button>
+                        </button> -->
                     </div>
                 </div>
             </div>

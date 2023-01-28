@@ -24,6 +24,8 @@ class Cart(object):
             item['unique_id'] = self.unique_id_generator(item['product'].id, item['color'], item['size'])
             yield item
 
+   
+
     def clear(self):
         del self.session[CART_SESSION_ID]
         self.save()
@@ -48,3 +50,10 @@ class Cart(object):
         if id in self.cart:
             del self.cart[id]
             self.save()
+
+    def total(self):
+        cart = self.cart.values()
+        total = 0
+        for item in cart:
+            total +=  Decimal(item['price']) * item['quantity']
+        return total     
