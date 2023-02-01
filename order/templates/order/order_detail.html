@@ -22,11 +22,14 @@
                     </tr>
                     </thead>
                     <tbody class="align-middle">
-                    
 
-                        {% for item in order.items.all %}
+
+                    {% for item in order.items.all %}
                         <tr>
-                            <td class="align-middle"><img src="{% if item.product.active_image %}{{ item.product.active_image.url }}{% else %}{% static 'img/vendor-5.jpg' %}{% endif %}" alt="" style="width: 50px;"></td>
+                            <td class="align-middle"><img src="
+
+                                    {% if item.product.active_image %}{{ item.product.active_image.url }}{% else %}{% static 'img/vendor-5.jpg' %}{% endif %}"
+                                                          alt="" style="width: 50px;"></td>
                             <td class="align-middle">{{ item.product.title }}</td>
                             <td class="align-middle">${{ item.price }}</td>
                             <td class="align-middle">{{ item.quantity }}</td>
@@ -34,22 +37,23 @@
                             <td class="align-middle">{{ item.size }}</td>
                             <td class="align-middle">${{ item.total_price }}</td>
                             <form method="post" action="">
-                            {% csrf_token %}
+                                {% csrf_token %}
                                 <td class="align-middle">
                                     <button type="submit" class="btn btn-sm btn-danger"><i
-                                            class="fa fa-times"></i> </button>
+                                            class="fa fa-times"></i></button>
                                 </td>
                             </form>
                         </tr>
-                        {% endfor %}
+                    {% endfor %}
 
                     </tbody>
                 </table>
             </div>
             <div class="col-lg-4">
-                <form class="mb-30" action="">
+                <form class="mb-30" action="{% url 'order:discount-add' order.id %}" method="post">
+                    {% csrf_token %}
                     <div class="input-group">
-                        <input type="text" class="form-control border-0 p-4" placeholder="Coupon Code">
+                        <input type="text" name="discount_code" class="form-control border-0 p-4" placeholder="Discount Code">
                         <div class="input-group-append">
                             <button class="btn btn-primary">Apply Coupon</button>
                         </div>
@@ -71,31 +75,33 @@
                     <div class="pt-2">
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
-                            <h5>${{ cart.total }}</h5>
+                            <h5>${{ order.total_price }}</h5>
                             <!-- {% if cart.total != None %}
                                
                             {% else %}
                                 <h5>$0</h5>
                             {% endif %} -->
-                                
+
                         </div>
                         {% if request.user.addresses.all %}
-                        <a href="" class="btn btn-block btn-success font-weight-bold my-3 py-3">Proceed To Peyment</a>
+                            <a href="" class="btn btn-block btn-success font-weight-bold my-3 py-3">Proceed To
+                                Peyment</a>
                         {% endif %}
 
-                        
                         {% if request.user.addresses.all %}
-                        <select class="form-control" aria-label="Default select example">  
-                            {% for address in request.user.addresses.all %}
-                                <option value="">{{ address.address }}</option>
-                            {% endfor %}  
-                        </select>
-                        <a href="{% url 'accounts:add-address' %}?next={% url 'order:order-detail' order.id %}" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Add Another Address</a>
+                            <select class="form-control" aria-label="Default select example">
+                                {% for address in request.user.addresses.all %}
+                                    <option value="">{{ address.address }}</option>
+                                {% endfor %}
+                            </select>
+                            <a href="{% url 'accounts:add-address' %}?next={% url 'order:order-detail' order.id %}"
+                               class="btn btn-block btn-primary font-weight-bold my-3 py-3">Add Another Address</a>
 
                         {% else %}
-                        <a href="{% url 'accounts:add-address' %}?next={% url 'order:order-detail' order.id %}" class="btn btn-block btn-primary font-weight-bold my-3 py-3">You Have To Add Address for Payment/Add Address</a>
+                            <a href="{% url 'accounts:add-address' %}?next={% url 'order:order-detail' order.id %}"
+                               class="btn btn-block btn-primary font-weight-bold my-3 py-3">You Have To Add Address for
+                                Payment/Add Address</a>
                         {% endif %}
-                            
 
                     </div>
                 </div>

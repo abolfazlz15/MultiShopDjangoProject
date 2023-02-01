@@ -3,8 +3,9 @@ from django.views import View
 
 from order.cart import Cart
 from product.models import Product
-from order. models import Order, OrderItem
+from order.models import Order, OrderItem, DiscountCode
 from decimal import Decimal
+
 
 class CartDetailView(View):
     def get(self, request):
@@ -17,7 +18,7 @@ class CartAddView(View):
     def post(self, request, product_id):
         cart = Cart(request)
         product = get_object_or_404(Product, id=product_id)
-        quantity , color, size = request.POST.get('quantity'), request.POST.get('color'), request.POST.get('size')
+        quantity, color, size = request.POST.get('quantity'), request.POST.get('color'), request.POST.get('size')
         print(quantity, color, size)
         cart.add(product, quantity, size, color)
         return redirect('product:product-detail', product.id, product.slug)
@@ -41,6 +42,22 @@ class OrderCreationView(View):
         cart = Cart(request)
         order = Order.objects.create(user=request.user, total_price=cart.total())
         for item in cart:
-            OrderItem.objects.create(order=order, product=item['product'], color=item['color'], size=item['size'], quantity=item['quantity'], price=item['price'])
-        
+            OrderItem.objects.create(order=order, product=item['product'], color=item['color'], size=item['size'],
+                                     quantity=item['quantity'], price=item['price'])
+
+        return redirect('order:order-detail', order.id)
+
+
+class SubmitDiscountCodeView(View):
+    def post(self, request, pk):
+        code = request.POST.get('discount_code')
+        order = get_object_or_404(Order, id=pk)
+        discount_code = get_object_or_404(DiscountCode, title=code)
+        if discount_code.quantity <= 0:
+            return redirect('order:order-detail', order.id)
+
+        order.total_price -= order.total_price * discount_code.discount_percent/100
+        order.save()
+        discount_code.quantity -= 1
+        discount_code.save()
         return redirect('order:order-detail', order.id)

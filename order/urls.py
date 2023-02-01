@@ -10,4 +10,6 @@ urlpatterns = [
     # order URL
     path('detail/<int:pk>', views.OrderDetaiView.as_view(), name='order-detail'),
     path('add', views.OrderCreationView.as_view(), name='order-add'),
+    path('add/discount/<int:pk>', views.SubmitDiscountCodeView.as_view(), name='discount-add'),
+
 ]
