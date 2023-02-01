@@ -5,6 +5,7 @@ from order.cart import Cart
 from product.models import Product
 from order.models import Order, OrderItem, DiscountCode
 from decimal import Decimal
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class CartDetailView(View):
@@ -31,13 +32,13 @@ class CartDeleteView(View):
         return redirect('order:cart-detail')
 
 
-class OrderDetaiView(View):
+class OrderDetaiView(LoginRequiredMixin, View):
     def get(self, request, pk):
         order = get_object_or_404(Order, id=pk)
         return render(request, 'order/order_detail.html', context={'order': order})
 
 
-class OrderCreationView(View):
+class OrderCreationView(LoginRequiredMixin, View):
     def get(self, request):
         cart = Cart(request)
         order = Order.objects.create(user=request.user, total_price=cart.total())
@@ -48,7 +49,7 @@ class OrderCreationView(View):
         return redirect('order:order-detail', order.id)
 
 
-class SubmitDiscountCodeView(View):
+class SubmitDiscountCodeView(LoginRequiredMixin, View):
     def post(self, request, pk):
         code = request.POST.get('discount_code')
         order = get_object_or_404(Order, id=pk)

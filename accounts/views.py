@@ -86,12 +86,15 @@ class LogoutView(LoginRequiredMixin, View):
         return redirect('accounts:login')
 
 
-class AddAddressView(View):
+class AddAddressView(LoginRequiredMixin, View):
     def get(self, request):
         form = AddAddressForm()
         return render(request, 'accounts/add_address_form.html', context={'form': form})
 
     def post(self, request):
+        if len(request.user.addresses.all()) > 2:
+            return redirect('order:cart-detail')
+
         form = AddAddressForm(request.POST)
         if form.is_valid():
             address = form.save(commit=False)
