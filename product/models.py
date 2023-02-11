@@ -19,6 +19,7 @@ def get_file_path(instance, filename):
 
 class Category(models.Model):
     title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='category_image/', null=True, blank=True)
     parent = models.ForeignKey(
         'self', on_delete=models.SET_NULL, null=True, blank=True, related_name='parents')
     slug = models.SlugField(null=True, blank=True)
@@ -113,9 +114,18 @@ class Comment(models.Model):
 
 class CommentLike(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='likes')
+        User, on_delete=models.CASCADE, related_name='comment_likes')
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name='likes')
+        Product, on_delete=models.CASCADE, related_name='comment_likes')
+
+    def __str__(self):
+        return f'{self.user} - {self.product.title}'
+
+
+class FavoriteProduct(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='favorites')
+
 
     def __str__(self):
         return f'{self.user} - {self.product.title}'

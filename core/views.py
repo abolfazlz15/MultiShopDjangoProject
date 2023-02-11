@@ -4,8 +4,8 @@ from django.views import generic
 
 from core.forms import ContactUsForm
 from core.models import ContactUs
-from product.models import Product, Category
-from core.models import BannerHomePage
+from product.models import Product, Category, FavoriteProduct
+# from core.models import BannerHomePage
 
 class ContactUsView(generic.FormView):
     template_name = 'core/contact_us.html'
@@ -32,3 +32,5 @@ class HomePageView(generic.TemplateView):
         context['categories'] = Category.objects.filter(parent=None).order_by('-id')
         # context['banners'] = BannerHomePage.objects.all()[:4]
         return context
+
+

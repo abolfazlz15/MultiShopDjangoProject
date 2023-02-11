@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 
-from product.models import Category, Comment, Product
+from product.models import Category, Comment, FavoriteProduct, Product
 
 
 class ProductDetailView(generic.DetailView):
@@ -57,10 +57,23 @@ class SearchProductView(generic.ListView):
 
 
 class CategoryList(generic.ListView):
-    template_name = 'videos/all-videos.html'
+    template_name = 'product/all-product.html'
     context_object_name = 'products'
 
     def get_queryset(self):
         slug = self.kwargs['slug']
         category = get_object_or_404(Category, slug=slug)
         return category.products.all()
+
+
+class FavoriteProductList(generic.ListView):
+    model = FavoriteProduct
+    template_name = 'product/favorite_product_list.html'
+    context_object_name = 'objects'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = self.model.objects.filter(user=self.request.user)
+
+        return queryset
+
