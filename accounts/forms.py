@@ -87,12 +87,7 @@ class CheckOTPForm(forms.Form):
     code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'enter your code'}),
                            validators=[validators.MaxLengthValidator(4)])
 
-    def clean_code(self):
-        code = self.cleaned_data['code']
-        otp_code = OTPCode.objects.filter(code=code)
-        if not otp_code:
-            raise ValidationError('this code not exist')
-        return code
+
 
 
 class AddAddressForm(forms.ModelForm):

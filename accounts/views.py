@@ -12,7 +12,7 @@ from django.views.generic import FormView, View
 from .forms import CheckOTPForm, LoginForm, RegisterForm, AddAddressForm
 from .models import OTPCode, User
 from django.contrib.auth import authenticate
-
+from accounts.otp_service import OTP
 
 class UserLoginView(FormView):
     template_name = 'accounts/login.html'
@@ -34,12 +34,11 @@ class UserRegisterView(FormView):
     form_class = RegisterForm
 
     def form_valid(self, form):
-        randcode = randint(1000, 9999)
         data = form.cleaned_data
-        OTPCode.objects.create(phone=data['phone'], code=randcode)
+        otp_service = OTP()
+        otp_service.generate_otp(data['phone'])
         cache.set(key='register', value={'phone': data['phone'], 'email': data['email'], 'password': data['password'],
-                                         'full_name': data['full_name'], 'code': randcode}, timeout=300)
-        print(randcode)
+                                         'full_name': data['full_name']}, timeout=300)
         return redirect('accounts:check-otp')
 
 
@@ -53,28 +52,22 @@ class CheckOTPView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
+            print(1)
             data = form.cleaned_data
             data_cache = cache.get(key='register')
-
+            otp_obj = OTP()
+            if data is None:
+                print(2)
+                messages.add_message(request, messages.WARNING, 'this code not exist or invalid')
+            print(3)
             try:
-                otp = OTPCode.objects.get(code=data['code'], phone=data_cache['phone'])
-                expiration_date = otp.expiration_date + timezone.timedelta(minutes=2)
-                if expiration_date < timezone.now():
-                    otp.delete()
-                    messages.add_message(request, messages.WARNING, 'Your code verification time is over')
-                    return render(request, 'accounts/check_otp.html', {'form': form})
-
-                elif OTPCode.objects.filter(code=data['code'], phone=data_cache['phone']).exists():
-
-                    user = User.objects.create_user(phone=data_cache['phone'], email=data_cache['email'],
-                                                    full_name=data_cache['full_name'], password=data_cache['password'])
-
-                    login(request, user)
-                    otp.delete()
-                    return redirect('accounts:login')
-
+                if otp_obj.verify_otp(otp=data['code'], email=data_cache['phone']):
+                    user = User.objects.create_user(phone=data_cache['phone'], email=data_cache['email'], full_name=data_cache['full_name'], password=data_cache['password'])
+                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    print(4)
+                    return redirect('core:home')
             except:
-                messages.add_message(request, messages.ERROR, 'Your code is not valid')
+                messages.add_message(request, messages.WARNING, 'this code not exist or invalid')
                 return render(request, 'accounts/check_otp.html', {'form': form})
 
         return render(request, 'accounts/check_otp.html', {'form': form})
