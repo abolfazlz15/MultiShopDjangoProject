@@ -1,23 +1,24 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core.forms import ContactUsForm
 from core.models import ContactUs
 from product.models import Product, Category, FavoriteProduct
 # from core.models import BannerHomePage
 
-class ContactUsView(generic.FormView):
+class ContactUsView(LoginRequiredMixin, generic.FormView):
     template_name = 'core/contact_us.html'
     form_class = ContactUsForm
 
     def get_success_url(self):
-        return reverse('product:product_list')
+        return reverse('product:product-list')
 
     def form_valid(self, form):
         clean_data = form.cleaned_data
         ContactUs.objects.create(
-            name=clean_data['name'], email=self.request.user, message=clean_data['message'])
+            name=clean_data['name'], phone=self.request.user.phone, message=clean_data['message'])
         return super().form_valid(form)
 
 

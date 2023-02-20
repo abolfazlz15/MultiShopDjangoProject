@@ -24,7 +24,7 @@ class ProductDetailView(generic.DetailView):
         user = request.user
         Comment.objects.create(text=text, product=product,
                                parent_id=parent_id, user=user)
-        return redirect('product:product_detail', self.get_object().id, self.get_object().slug)
+        return redirect('product:product-detail', self.get_object().id, self.get_object().slug)
 
 
 class ProductListView(generic.ListView):
