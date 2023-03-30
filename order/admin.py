@@ -18,3 +18,10 @@ class OrderAdminModel(admin.ModelAdmin):
 class DiscountAdminModel(admin.ModelAdmin):
     list_display = ['title', 'discount_percent', 'quantity']
     search_fields = ['title', 'discount_percent']
+
+
+    def has_module_permission(self, request):
+        if request.user.is_admin:
+            return False
+        return True
+    

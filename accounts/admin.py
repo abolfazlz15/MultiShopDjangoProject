@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .forms import UserChangeForm, UserCreationForm
-from .models import OTPCode, User, UserAddress
+from .models import User, UserAddress
 
 
 class UserAdmin(BaseUserAdmin):
@@ -58,7 +58,5 @@ class UserAdmin(BaseUserAdmin):
     list_display_links = ('showImage', 'phone', 'email', 'full_name', 'is_admin')
     filter_horizontal = ()
 
-
 admin.site.register(User, UserAdmin)
-admin.site.register(OTPCode)
 admin.site.register(UserAddress)
