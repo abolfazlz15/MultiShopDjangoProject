@@ -1,13 +1,43 @@
+from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import User, OTPCode, UserAddress
 from .forms import UserChangeForm, UserCreationForm
+from .models import User, UserAddress
 
 
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
+
+    # permissions
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        field = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if not request.user.is_superuser:
+            if db_field.name == 'is_superuser' or db_field.name == 'is_admin':
+                field.widget = forms.HiddenInput()
+        return field
+
+    def has_change_permission(self, request, obj=None):
+        if obj is not None and request.user.is_superuser == False:
+            if obj is not None and request.user != obj:
+                if obj is not None and request.user.is_admin and obj.is_admin:
+                    return False
+                else:
+                    return True
+            else:
+                return True
+        else:
+            return True
+
+    def has_delete_permission(self, request, obj=None):
+        if obj is not None and request.user.is_superuser == False:
+            if obj is not None and request.user.is_admin and obj.is_admin:
+                return False
+            else:
+                return True
+        else:
+            return True
 
     list_display = ('showImage', 'phone', 'email', 'full_name', 'is_admin')
     list_filter = ('is_admin', 'is_active', 'is_superuser')
@@ -28,14 +58,5 @@ class UserAdmin(BaseUserAdmin):
     list_display_links = ('showImage', 'phone', 'email', 'full_name', 'is_admin')
     filter_horizontal = ()
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        is_superuser = request.user.is_superuser
-        if not is_superuser:
-            form.base_fields['is_superuser'].disabled = True
-        return form
-
-
 admin.site.register(User, UserAdmin)
-admin.site.register(OTPCode)
 admin.site.register(UserAddress)
