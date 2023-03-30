@@ -1,23 +1,21 @@
-from random import randint
-
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.utils import timezone
 from django.views.generic import FormView, View
 
-from .forms import CheckOTPForm, LoginForm, RegisterForm, AddAddressForm
-from .models import OTPCode, User
-from django.contrib.auth import authenticate
 from accounts.otp_service import OTP
+
+from .forms import AddAddressForm, CheckOTPForm, LoginForm, RegisterForm
+from .models import User
+
 
 class UserLoginView(FormView):
     template_name = 'accounts/login.html'
     form_class = LoginForm
-    success_url = reverse_lazy('accounts:login')
+    success_url = reverse_lazy('core:home')
 
     def form_valid(self, form):
         data = form.cleaned_data

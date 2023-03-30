@@ -52,7 +52,7 @@ class SearchProductView(generic.ListView):
                 Q(title__icontains=q) |
                 Q(category__title__icontains=q) |
                 Q(description__icontains=q)
-            ).filter(status=True)
+            ).filter(status=True).distinct()
         return products
 
 
