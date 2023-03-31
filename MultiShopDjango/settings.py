@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     # helper apps
     'ckeditor',
     'django_cleanup.apps.CleanupConfig',
-
+    'dynamic_breadcrumbs',
 ]
 
 MIDDLEWARE = [
@@ -64,6 +64,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # custom context_processors
                 'context_processors.context_processors.categories',
+                'context_processors.context_processors.cart_total',
+                'dynamic_breadcrumbs.context_processors.breadcrumbs',
             ],
         },
     },
