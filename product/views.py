@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
+from django.views.decorators.cache import cache_page
 
 from product.models import Category, Comment, FavoriteProduct, Product
 
@@ -11,10 +12,15 @@ class ProductDetailView(generic.DetailView):
     query_pk_and_slug = True
     context_object_name = 'product'
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        category = product.category.first()
+        related_products = Product.objects.filter(category=category).exclude(id=product.id)
         context['comments'] = Comment.objects.filter(status=True).filter(
-            parent=None).filter(product=self.get_object())
+            parent=None).filter(product=product).prefetch_related('user')
+        context['related_products'] = related_products
         return context
 
     def post(self, request, pk, slug):
@@ -25,6 +31,7 @@ class ProductDetailView(generic.DetailView):
         Comment.objects.create(text=text, product=product,
                                parent_id=parent_id, user=user)
         return redirect('product:product-detail', self.get_object().id, self.get_object().slug)
+
 
 
 class ProductListView(generic.ListView):
