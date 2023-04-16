@@ -30,7 +30,7 @@ class HomePageView(generic.TemplateView):
         products = Product.objects.filter(status=True).order_by('-id')
         context['products'] = products[:4]
         context['products_old'] = products.order_by('created')
-        context['categories'] = Category.objects.filter(parent=None).order_by('-id')
+        context['categories'] = Category.objects.filter(parent=None).order_by('?')[:4]
         # context['banners'] = BannerHomePage.objects.all()[:4]
         return context
 

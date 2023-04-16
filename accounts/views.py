@@ -50,19 +50,15 @@ class CheckOTPView(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            print(1)
             data = form.cleaned_data
             data_cache = cache.get(key='register')
             otp_obj = OTP()
             if data is None:
-                print(2)
                 messages.add_message(request, messages.WARNING, 'this code not exist or invalid')
-            print(3)
             try:
                 if otp_obj.verify_otp(otp=data['code'], email=data_cache['phone']):
                     user = User.objects.create_user(phone=data_cache['phone'], email=data_cache['email'], full_name=data_cache['full_name'], password=data_cache['password'])
                     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                    print(4)
                     return redirect('core:home')
             except:
                 messages.add_message(request, messages.WARNING, 'this code not exist or invalid')
