@@ -1,11 +1,13 @@
+from decimal import Decimal
+
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
 from order.cart import Cart
+from order.models import DiscountCode, Order, OrderItem
 from product.models import Product
-from order.models import Order, OrderItem, DiscountCode
-from decimal import Decimal
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class CartDetailView(View):
@@ -53,12 +55,16 @@ class SubmitDiscountCodeView(LoginRequiredMixin, View):
     def post(self, request, pk):
         code = request.POST.get('discount_code')
         order = get_object_or_404(Order, id=pk)
-        discount_code = get_object_or_404(DiscountCode, title=code)
-        if discount_code.quantity <= 0:
+        discount_code = DiscountCode.get(code, request.user)
+        print(discount_code)
+        if discount_code is None:
+            messages.error(
+                request,
+                "This coupon does not exists!",
+                'danger',
+            )
             return redirect('order:order-detail', order.id)
 
         order.total_price -= order.total_price * discount_code.discount_percent/100
         order.save()
-        discount_code.quantity -= 1
-        discount_code.save()
         return redirect('order:order-detail', order.id)
