@@ -50,9 +50,15 @@
                 </table>
             </div>
             <div class="col-lg-4">
+                {% if messages %}
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                {% endif %}
                 <form class="mb-30" action="{% url 'order:discount-add' order.id %}" method="post">
                     {% csrf_token %}
                     <div class="input-group">
+
                         <input type="text" name="discount_code" class="form-control border-0 p-4" placeholder="Discount Code">
                         <div class="input-group-append">
                             <button class="btn btn-primary">Apply Coupon</button>
@@ -63,24 +69,13 @@
                     Summary</span></h5>
                 <div class="bg-light p-30 mb-5">
                     <div class="border-bottom pb-2">
-                        <div class="d-flex justify-content-between mb-3">
-                            <h6>Subtotal</h6>
-                            <h6>$150</h6>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">$10</h6>
-                        </div>
+ 
                     </div>
                     <div class="pt-2">
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
                             <h5>${{ order.total_price }}</h5>
-                            <!-- {% if cart.total != None %}
-                               
-                            {% else %}
-                                <h5>$0</h5>
-                            {% endif %} -->
+
 
                         </div>
                         {% if request.user.addresses.all %}

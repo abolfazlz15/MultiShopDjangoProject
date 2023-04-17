@@ -16,12 +16,12 @@ class OrderAdminModel(admin.ModelAdmin):
 
 @admin.register(models.DiscountCode)
 class DiscountAdminModel(admin.ModelAdmin):
-    list_display = ['title', 'discount_percent', 'quantity']
-    search_fields = ['title', 'discount_percent']
+    list_display = ['code', 'discount_percent', 'quantity']
+    search_fields = ['code', 'discount_percent']
 
 
     def has_module_permission(self, request):
-        if request.user.is_admin:
+        if not request.user.is_superuser:
             return False
         return True
     
