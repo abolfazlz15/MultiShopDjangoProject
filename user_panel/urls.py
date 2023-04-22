@@ -1,0 +1,8 @@
+from django.urls import path
+from user_panel import views
+
+
+app_name = 'user_panel'
+urlpatterns = [
+    path('', views.IndexPageView.as_view(), name='index'),
+]
