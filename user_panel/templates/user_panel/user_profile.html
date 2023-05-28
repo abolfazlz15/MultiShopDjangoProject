@@ -1,0 +1,109 @@
+{% extends 'user_panel_inc/base.html' %}
+{% load static %}
+{% block content %}
+<div class="wrapper">
+
+
+<div class="content-wrapper">
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+
+          <!-- Profile Image -->
+          <div class="card card-primary card-outline">
+            <div class="card-body box-profile">
+              <div class="text-center">
+                <img class="profile-user-img img-fluid img-circle"
+                     src="{{ request.user.profile_image.url }}"
+                     alt="User profile picture">
+              </div>
+
+              <h3 class="profile-username text-center">{{ request.user.full_name }}</h3>
+
+
+              <ul class="list-group list-group-unbordered mb-3">
+                <li class="list-group-item">
+                  <b>phone</b> <a class="float-right">{{ request.user.phone }}</a>
+                </li>
+                <li class="list-group-item">
+                  <b>email</b> <a class="float-right">{{ request.user.email }}</a>
+                </li>
+
+              </ul>
+
+              </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+          <!-- About Me Box -->
+
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+          <div class="card">
+            <div class="card-body">
+              <div class="tab-content">
+                <div class="active tab-pane" id="activity">
+                  <!-- Post -->
+                  <form class="form-horizontal" method="post">
+                    <strong>Name</strong>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <button type="button" class="btn btn-primary">Edit</button>
+                      </div>
+                      <!-- /btn-group -->
+                      <input type="text" class="form-control">
+                    </div>
+                  </form>
+                  <form class="form-horizontal" method="post">
+                    <strong>Phone</strong>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <button type="button" class="btn btn-primary">Edit</button>
+                      </div>
+                      <!-- /btn-group -->
+                      <input type="text" class="form-control">
+                    </div>
+                  </form>
+                  <form class="form-horizontal" method="post">
+                    <strong>Email</strong>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <button type="button" class="btn btn-primary">Edit</button>
+                      </div>
+                      <!-- /btn-group -->
+                      <input type="text" class="form-control">
+                    </div>
+                  </form>
+                  <form class="form-horizontal" method="post">
+                    <strong>Image Profile</strong>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <button type="button" class="btn btn-primary">Edit</button>
+                      </div>
+                      <!-- /btn-group -->
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="exampleInputFile">
+                          <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                        </div>
+                    </div>
+                  </form>
+
+                <!-- /.tab-pane -->
+              </div>
+              <!-- /.tab-content -->
+            </div><!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </section>
+</div>
+{% endblock content %}

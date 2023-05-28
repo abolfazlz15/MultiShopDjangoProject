@@ -5,7 +5,10 @@
     <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
+    {% include 'user_panel_inc/navbar.html/' %}
+    {% include 'user_panel_inc/sidebar.html' %}
     
+
     {% block content %}
         
     {% endblock content %}
