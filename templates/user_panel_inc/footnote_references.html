@@ -1,39 +1,34 @@
 {% load static %}
-
-<!-- jQuery -->
 <script src="{% static 'user_panel/plugins/jquery/jquery.min.js' %}"></script>
 <!-- jQuery UI 1.11.4 -->
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="{% static 'user_panel/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
 <script src="{% static 'user_panel/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<!-- Morris.js charts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src="{% static 'user_panel/plugins/morris/morris.min.js' %}"></script>
+<!-- ChartJS -->
+<script src="{% static 'user_panel/plugins/chart.js/Chart.min.js' %}"></script>
 <!-- Sparkline -->
-<script src="% static 'user_panel/plugins/sparkline/jquery.sparkline.min.js' %}"></script>
-<!-- jvectormap -->
-<script src="{% static 'user_panel/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js' %}"></script>
-<script src="{% static 'user_panel/plugins/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+<script src="{% static 'user_panel/plugins/sparklines/sparkline.js' %}"></script>
+<!-- JQVMap -->
+<script src="{% static 'user_panel/plugins/jqvmap/jquery.vmap.min.js' %}"></script>
+<script src="{% static 'user_panel/plugins/jqvmap/maps/jquery.vmap.usa.js' %}"></script>
 <!-- jQuery Knob Chart -->
-<script src="{% static 'user_panel/plugins/knob/jquery.knob.js' %}"></script>
+<script src="{% static 'user_panel/plugins/jquery-knob/jquery.knob.min.js' %}"></script>
 <!-- daterangepicker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+<script src="{% static 'user_panel/plugins/moment/moment.min.js' %}"></script>
 <script src="{% static 'user_panel/plugins/daterangepicker/daterangepicker.js' %}"></script>
-<!-- datepicker -->
-<script src="{% static 'user_panel/plugins/datepicker/bootstrap-datepicker.js' %}"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="{% static 'user_panel/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js' %}"></script>
-<!-- Slimscroll -->
-<script src="{% static 'user_panel/plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
-<!-- FastClick -->
-<script src="{% static 'user_panel/plugins/fastclick/fastclick.js' %}"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{% static 'user_panel/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<!-- Summernote -->
+<script src="{% static 'user_panel/plugins/summernote/summernote-bs4.min.js' %}"></script>
+<!-- overlayScrollbars -->
+<script src="{% static 'user_panel/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
 <!-- AdminLTE App -->
-<script src="{% static 'user_panel/js/adminlte.js' %}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{% static 'user_panel/js/pages/dashboard.js' %}"></script>
+<script src="{% static 'user_panel/dist/js/adminlte.js' %}"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="{% static 'user_panel/js/demo.js' %}"></script>
+<script src="{% static 'user_panel/dist/js/demo.js' %}"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="{% static 'user_panel/dist/js/pages/dashboard.js' %}"></script>
