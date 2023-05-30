@@ -50,36 +50,40 @@
                 <div class="active tab-pane" id="activity">
                   <!-- Post -->
                   <form class="form-horizontal" method="post">
+                    {% csrf_token %}
                     <strong>Name</strong>
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
-                        <button type="button" class="btn btn-primary">Edit</button>
+                        <button type="submit" class="btn btn-primary">Edit</button>
                       </div>
                       <!-- /btn-group -->
-                      <input type="text" class="form-control">
+                      {{ change_name_form.full_name }}
                     </div>
                   </form>
                   <form class="form-horizontal" method="post">
+                    {% csrf_token %}
                     <strong>Phone</strong>
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
-                        <button type="button" class="btn btn-primary">Edit</button>
+                        <button type="submit" class="btn btn-primary">Edit</button>
                       </div>
                       <!-- /btn-group -->
-                      <input type="text" class="form-control">
+                      {{ change_phone_form.phone }}
                     </div>
                   </form>
                   <form class="form-horizontal" method="post">
+                    {% csrf_token %}
                     <strong>Email</strong>
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <button type="button" class="btn btn-primary">Edit</button>
                       </div>
                       <!-- /btn-group -->
-                      <input type="text" class="form-control">
+                      {{ change_email_form.email }}
                     </div>
                   </form>
                   <form class="form-horizontal" method="post">
+                    {% csrf_token %}
                     <strong>Image Profile</strong>
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
@@ -87,7 +91,8 @@
                       </div>
                       <!-- /btn-group -->
                         <div class="custom-file">
-                          <input type="file" class="custom-file-input" id="exampleInputFile">
+                          {{ change_profile_image_form.profile_image }}
+
                           <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                         </div>
                     </div>
