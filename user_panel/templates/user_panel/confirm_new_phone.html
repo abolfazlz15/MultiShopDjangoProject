@@ -21,21 +21,30 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg" style="font-size: large;">onfirm phone number</p>
+      <p class="login-box-msg" style="font-size: large;">confirm phone number</p>
 
       <form  method="post">
+        {% csrf_token %}
+        
 
+
+        {% for error in form.errors %}
+          <i>{{ error }}</i>
+        {% endfor %}
+          
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Code">
+          {{ form }}
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="nav-icon fa fa-comments"></span>
             </div>
           </div>
         </div>
-        <button type="button" class="btn btn-block btn-primary">Primary</button>
+        <button type="submit" class="btn btn-block btn-primary">Primary</button>
       </form>
-
+      {% for message in messages %}
+      <i>{{ message }}</i>
+    {% endfor %}
 
     </div>
     <!-- /.login-card-body -->
