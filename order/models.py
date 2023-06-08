@@ -64,10 +64,8 @@ class DiscountCode(models.Model):
             active=True,
         )
         if not coupon_qs.exists():
-            print(1)
             return None
         coupon = coupon_qs.first()
-        print(2)
         if coupon.allowed_for.exists() and user not in coupon.allowed_for.all():
             return None
         if coupon.quantity is not None:

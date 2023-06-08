@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views import generic
 
 from accounts.models import User
@@ -53,8 +53,8 @@ class UserProfileView(LoginRequiredMixin, generic.View):
         elif 'change_phone_form' in request.POST and change_phone_form.is_valid():
             phone = change_phone_form.cleaned_data['phone']
             otp_code = OTP()
-            otp_code.generate_otp(phone)
-            cache.set(key='change_phone', value={'new_phone': phone, 'current_phone': request.user.phone}, timeout=300)
+            otp_code.generate_otp(request.user.phone)
+            cache.set(key='change_phone', value={'new_phone': phone, 'current_phone': request.user.phone, 'user_id': request.user.id}, timeout=300)
             return redirect('user_panel:confirm_phone')
         
         elif 'change_email_form' in request.POST and change_email_form.is_valid():
@@ -80,21 +80,23 @@ class ConfirmNewPhoneView(generic.View):
         if form.is_valid():
             otp_obj = OTP()
             data = form.cleaned_data
-            user_phone_data =  cache.get(key='change_phone')
-            print(1)
-            if user_phone_data is None:
-                messages.add_message(self.request, messages.ERROR, 'your code is worng')
-            try:
-                if otp_obj.verify_otp(data['code'], user_phone_data['current_phone']):
-                    user = User.objects.get(phone=user_phone_data['current_phone'])
-                    user.update(phone=user_phone_data['new_phone'])
-                    print(2)
-                    return redirect('user_panel:user_profile')
-            except:
-                print(3)
-                messages.add_message(self.request, messages.ERROR, 'your code is worng')
-                return render(request, 'user_panel/confirm_new_phone.html', context={'form': form})
-            
+            user_data =  cache.get(key='change_phone')
+            if user_data is None:
+                messages.add_message(self.request, messages.ERROR, 'your code is worng test')
+            else:
+                try:
+                    if otp_obj.verify_otp(otp=data['code'], data=user_data['current_phone']):
+                        user = get_object_or_404(User, phone=user_data['current_phone'])
+                        user.phone = user_data['new_phone']
+                        user.save()                
+                        return redirect('user_panel:user_profile')
+                    else:
+                                        messages.add_message(self.request, messages.ERROR, 'your code is worng')
+                    return render(request, 'user_panel/confirm_new_phone.html', context={'form': form})
+                except:
+                    messages.add_message(self.request, messages.ERROR, 'your code is worng')
+                    return render(request, 'user_panel/confirm_new_phone.html', context={'form': form})
+                
         return render(request, 'user_panel/confirm_new_phone.html', context={'form': form})
 
 
