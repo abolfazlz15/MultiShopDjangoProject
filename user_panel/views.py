@@ -82,7 +82,7 @@ class ConfirmNewPhoneView(generic.View):
             data = form.cleaned_data
             user_data =  cache.get(key='change_phone')
             if user_data is None:
-                messages.add_message(self.request, messages.ERROR, 'your code is worng test')
+                messages.add_message(self.request, messages.ERROR, 'your code is worng')
             else:
                 try:
                     if otp_obj.verify_otp(otp=data['code'], data=user_data['current_phone']):
