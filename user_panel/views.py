@@ -17,6 +17,7 @@ class IndexPageView(LoginRequiredMixin ,generic.TemplateView):
         context = super(IndexPageView, self).get_context_data(**kwargs)
         # order status in main page
         all_order = Order.objects.filter(user=self.request.user).values_list('status', flat=True)
+        context['all_order'] = all_order.count()
         context['delivered_order'] = all_order.filter(status='Delivered').count()
         context['in_Progrssing_order'] = all_order.filter(status='In Progrssing').count()
         context['returned_order'] = all_order.filter(status='Returned').count()
@@ -100,5 +101,10 @@ class ConfirmNewPhoneView(generic.View):
         return render(request, 'user_panel/confirm_new_phone.html', context={'form': form})
 
 
+class OrderListView(LoginRequiredMixin, generic.ListView):
+    template_name = 'user_panel/order_list.html'
+    context_object_name = 'orders'
 
-            
+    def get_queryset(self):
+        queryset = Order.objects.filter(user=self.request.user)
+        return queryset

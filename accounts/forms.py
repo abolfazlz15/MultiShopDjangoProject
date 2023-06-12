@@ -1,10 +1,9 @@
-from typing import Any, Dict
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.password_validation import validate_password
 from django.core import validators
 from django.core.exceptions import ValidationError
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 from .models import User, UserAddress
 
 class UserCreationForm(forms.ModelForm):
