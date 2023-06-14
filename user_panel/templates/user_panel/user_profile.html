@@ -95,15 +95,17 @@
                       {{ change_email_form.email }}
                     </div>
                   </form>
-                  <form class="form-horizontal" method="post">
+                  <form class="form-horizontal" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% for error in form.change_profile_image_form.errors %}
-                      <span>{{ error }}</span>
+                    {% for error in change_profile_image_form.profile_image.errors %}
+                      <div class="alert alert-warning alert-dismissible">
+                        <span>{{ error }}</span>
+                      </div>  
                     {% endfor %}
                     <strong>Image Profile</strong>
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
-                        <button type="button" name="change_profile_image_form" class="btn btn-primary">Edit</button>
+                        <button type="submit" name="change_profile_image_form" class="btn btn-primary">Edit</button>
                       </div>
                       <div class="custom-file">
                         {{ change_profile_image_form.profile_image }}

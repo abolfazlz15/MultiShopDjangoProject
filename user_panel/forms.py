@@ -10,7 +10,7 @@ class ChangeNameForm(forms.Form):
 
 
 class ChangeEmailForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), required=False)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -22,7 +22,7 @@ class ChangeEmailForm(forms.Form):
 
 
 class ChangePhoneForm(forms.Form):
-    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     
     def clean_phone(self):
         phone = self.cleaned_data['phone']
@@ -39,6 +39,16 @@ class ChangeProfileImageForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ('profile_image',)
+
+    def clean_profile_image(self):
+        image = self.cleaned_data['profile_image']
+        if image:
+            if image.size > 4*1024*1024:
+                raise ValidationError('Image file too large ( > 4mb )', code='invalid_phone') 
+            return image
+        else:
+            raise ValidationError("Couldn't read uploaded image")
+
 
 
 class ConfirmNewPhoneForm(forms.Form):

@@ -76,9 +76,9 @@ class UserProfileView(LoginRequiredMixin, generic.View):
         
         
         elif 'change_profile_image_form' in request.POST:
-            change_profile_image_form = forms.ChangeProfileImageForm(request.POST or None, request.FILES)
-                
+            change_profile_image_form = forms.ChangeProfileImageForm(request.POST, request.FILES)
             if change_profile_image_form.is_valid():
+                
                 user.profile_image = change_profile_image_form.cleaned_data['profile_image']
                 user.save()
                 return redirect('user_panel:user_profile')
