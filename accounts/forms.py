@@ -1,10 +1,12 @@
 from django import forms
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.password_validation import validate_password
 from django.core import validators
 from django.core.exceptions import ValidationError
-from django.contrib.auth import authenticate
+
 from .models import User, UserAddress
+
 
 class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -74,6 +76,7 @@ class RegisterForm(forms.Form):
     def clean_email(self):
         email = self.cleaned_data['email']
         user = User.objects.filter(email=email)
+
         if user:
             raise ValidationError('This email has already been registered')
         return email
