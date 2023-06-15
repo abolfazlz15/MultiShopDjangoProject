@@ -50,20 +50,45 @@
           </div>
         </div>
         <!-- /.card-body -->
+        {% if page_obj.has_other_pages %}
         <div class="card-footer">
           <nav aria-label="Contacts Page Navigation">
             <ul class="pagination justify-content-center m-0">
-              <li class="page-item active"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">4</a></li>
-              <li class="page-item"><a class="page-link" href="#">5</a></li>
-              <li class="page-item"><a class="page-link" href="#">6</a></li>
-              <li class="page-item"><a class="page-link" href="#">7</a></li>
-              <li class="page-item"><a class="page-link" href="#">8</a></li>
+              {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}" class="mx-1"><i
+                      class="fa fa-chevron-right"></i></a>
+              {% if page_obj.number > 3 %}
+                  <a href="?page=1" class="mx-1">1</a>
+                  {% if page_obj.number > 4 %}
+                      <span>...</span>
+                  {% endif %}
+              {% endif %}
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                  <a href="?page={{ num }}" class="active mx-1">{{ num }}</a>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <a href="?page={{ num }}" class="mx-1">{{ num }}</a>
+              {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+              {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                  <span>...</span>
+                  <a href="?page={{ page_obj.paginator.num_pages }}"
+                     class="mx-1">{{ page_obj.paginator.num_pages }}</a>
+              {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                  <a href="?page={{ page_obj.paginator.num_pages }}"
+                     class="mx-1">{{ page_obj.paginator.num_pages }}</a>
+              {% endif %}
+              <a href="?page={{ page_obj.next_page_number }}" class="mx-1"><i
+                      class="fa fa-chevron-left"></i></a>
+          {% endif %}
             </ul>
           </nav>
         </div>
+        {% endif %}
         <!-- /.card-footer -->
       </div>
       <!-- /.card -->

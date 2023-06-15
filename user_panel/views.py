@@ -166,6 +166,7 @@ class FavoriteProductList(generic.ListView):
     model = FavoriteProduct
     template_name = 'user_panel/favorite_product_list.html'
     context_object_name = 'products'
+    paginate_by = 1
 
     def get_queryset(self):
         queryset = super().get_queryset()
