@@ -72,16 +72,3 @@ class CategoryList(generic.ListView):
         slug = self.kwargs['slug']
         category = get_object_or_404(Category, slug=slug)
         return category.products.all()
-
-
-class FavoriteProductList(generic.ListView):
-    model = FavoriteProduct
-    template_name = 'product/favorite_product_list.html'
-    context_object_name = 'objects'
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset = self.model.objects.filter(user=self.request.user)
-
-        return queryset
-
