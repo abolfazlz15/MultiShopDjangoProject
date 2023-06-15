@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
 
 from accounts.models import User
 from accounts.otp_service import OTP
 from order.models import Order
+from product.models import FavoriteProduct
 from user_panel import forms
 
 
@@ -158,4 +159,17 @@ class OrderListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         queryset = Order.objects.filter(user=self.request.user)
+        return queryset
+    
+
+class FavoriteProductList(generic.ListView):
+    model = FavoriteProduct
+    template_name = 'user_panel/favorite_product_list.html'
+    context_object_name = 'products'
+    paginate_by = 1
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = self.model.objects.filter(user=self.request.user)
+
         return queryset

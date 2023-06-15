@@ -1,0 +1,100 @@
+{% extends 'user_panel_inc/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-wrapper" style="min-height: 1604.8px;">
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card card-solid">
+        <div class="card-body pb-0">
+          <div class="row">
+            
+            {% for product in products %}
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+              <div class="card bg-light d-flex flex-fill">
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-7">
+                      <h2 class="lead"><b>{{ product.product.title }}</b></h2>
+                      <p class="text-muted text-sm"><b>price: </b>{{ product.product.price }}</p>
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small"><span class="fa-li"></span>{% if product.product.stock == False  %}status: is not available{% endif %}
+                          </li>
+                      </ul>
+                    </div>
+                    <div class="col-5 text-center">
+                      <img style="width: 100px; height: 100px;" src="{{ product.product.active_image.url }}" alt="user-avatar" class="img-circle img-fluid">
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <a href="{% url 'order:cart-add' product.product.id %}" class="btn btn-sm bg-teal">
+                      <i class="nav-icon fa fa-shopping-bag"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm bg-teal">
+                      <i class="fas fa-heart"></i>  delete
+                    </a>
+                    <a href="{% url 'product:product-detail' product.product.id product.product.slug %}" class="btn btn-sm btn-primary">
+                      View priduct
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+              
+          </div>
+        </div>
+        <!-- /.card-body -->
+        {% if page_obj.has_other_pages %}
+        <div class="card-footer">
+          <nav aria-label="Contacts Page Navigation">
+            <ul class="pagination justify-content-center m-0">
+              {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}" class="mx-1"><i
+                      class="fa fa-chevron-right"></i></a>
+              {% if page_obj.number > 3 %}
+                  <a href="?page=1" class="mx-1">1</a>
+                  {% if page_obj.number > 4 %}
+                      <span>...</span>
+                  {% endif %}
+              {% endif %}
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                  <a href="?page={{ num }}" class="active mx-1">{{ num }}</a>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <a href="?page={{ num }}" class="mx-1">{{ num }}</a>
+              {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+              {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                  <span>...</span>
+                  <a href="?page={{ page_obj.paginator.num_pages }}"
+                     class="mx-1">{{ page_obj.paginator.num_pages }}</a>
+              {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                  <a href="?page={{ page_obj.paginator.num_pages }}"
+                     class="mx-1">{{ page_obj.paginator.num_pages }}</a>
+              {% endif %}
+              <a href="?page={{ page_obj.next_page_number }}" class="mx-1"><i
+                      class="fa fa-chevron-left"></i></a>
+          {% endif %}
+            </ul>
+          </nav>
+        </div>
+        {% endif %}
+        <!-- /.card-footer -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock content %}

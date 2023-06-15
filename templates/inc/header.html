@@ -142,7 +142,7 @@
                     <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                         
                         {% if request.user.is_authenticated %}
-                            <a href="{% url 'product:favorite-product' %}" class="btn px-0">
+                            <a href="{% url 'user_panel:favorite_product_list' %}" class="btn px-0">
                                 <i class="fas fa-heart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle"
                                     style="padding-bottom: 2px;">{{ request.user.favorites.all.count }}</span>

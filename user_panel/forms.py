@@ -44,7 +44,7 @@ class ChangeProfileImageForm(forms.ModelForm):
         image = self.cleaned_data['profile_image']
         if image:
             if image.size > 4*1024*1024:
-                raise ValidationError('Image file too large ( > 4mb )', code='invalid_phone') 
+                raise ValidationError('Image file too large ( > 4mb )', code='invalid_image_profile') 
             return image
         else:
             raise ValidationError("Couldn't read uploaded image")
