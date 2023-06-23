@@ -1,10 +1,11 @@
 from django import forms
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.password_validation import validate_password
 from django.core import validators
 from django.core.exceptions import ValidationError
 
-from .models import OTPCode, User, UserAddress
+from .models import User, UserAddress
 
 
 class UserCreationForm(forms.ModelForm):
@@ -43,6 +44,14 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'enter your password'})
     )
+    
+    def clean(self):
+        username = self.cleaned_data['username']
+        password = self.cleaned_data['password']
+        user = authenticate(username=username, password=password)
+        if not user:
+            raise forms.ValidationError('email|phone or password is invalid')
+        return self.cleaned_data
 
 
 class RegisterForm(forms.Form):
@@ -67,6 +76,7 @@ class RegisterForm(forms.Form):
     def clean_email(self):
         email = self.cleaned_data['email']
         user = User.objects.filter(email=email)
+
         if user:
             raise ValidationError('This email has already been registered')
         return email

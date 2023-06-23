@@ -1,0 +1,129 @@
+{% extends 'user_panel_inc/base.html' %}
+{% load static %}
+{% block content %}
+<div class="wrapper">
+
+
+<div class="content-wrapper">
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+
+          <!-- Profile Image -->
+          <div class="card card-primary card-outline">
+            <div class="card-body box-profile">
+              <div class="text-center">
+                <img class="profile-user-img img-fluid img-circle"
+                     src="{{ request.user.profile_image.url }}"
+                     alt="User profile picture">
+              </div>
+
+              <h3 class="profile-username text-center">{{ request.user.full_name }}</h3>
+
+
+              <ul class="list-group list-group-unbordered mb-3">
+                <li class="list-group-item">
+                  <b>phone</b> <a class="float-right">{{ request.user.phone }}</a>
+                </li>
+                <li class="list-group-item">
+                  <b>email</b> <a class="float-right">{{ request.user.email }}</a>
+                </li>
+
+              </ul>
+
+              </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+          <!-- About Me Box -->
+
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+          <div class="card">
+            <div class="card-body">
+              <div class="tab-content">
+                <div class="active tab-pane" id="activity">
+                  <!-- Post -->
+                  {% for error in change_phone_form.non_field_errors %}
+                    <p class="alert alert-danger">{{ error }}</p>
+                  {% endfor %}
+                  <form class="form-horizontal" method="post">
+                    {% csrf_token %}
+                    {% for error in form.change_name_form.full_name.errors %}
+                      <span>{{ error }}</span>
+                    {% endfor %}
+                    <strong>Name</strong>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <button type="submit" name="change_name_form" class="btn btn-primary">Edit</button>
+                      </div>
+                      {{ change_name_form.full_name }}
+                    </div>
+                  </form>
+                  <form class="form-horizontal" method="post">
+                    {% csrf_token %}
+                    {% for error in change_phone_form.errors %}
+                      <div class="alert alert-warning alert-dismissible">
+                        <span>{{ error }}</span>
+                      </div>
+                    {% endfor %}
+                    <strong>Phone</strong>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <button type="submit" name="change_phone_form" class="btn btn-primary">Edit</button>
+                      </div>
+                      {{ change_phone_form.phone }}
+                    </div>
+                  </form>
+                  <form class="form-horizontal" method="post">
+                    {% csrf_token %}
+                    {% for error in change_email_form.email.errors %}
+                      <div class="alert alert-warning alert-dismissible">
+                        <span>{{ error }}</span>
+                      </div>
+                    {% endfor %}
+                    <strong>Email</strong>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <button type="submit" name="change_email_form" class="btn btn-primary">Edit</button>
+                      </div>
+                      {{ change_email_form.email }}
+                    </div>
+                  </form>
+                  <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for error in change_profile_image_form.profile_image.errors %}
+                      <div class="alert alert-warning alert-dismissible">
+                        <span>{{ error }}</span>
+                      </div>  
+                    {% endfor %}
+                    <strong>Image Profile</strong>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <button type="submit" name="change_profile_image_form" class="btn btn-primary">Edit</button>
+                      </div>
+                      <div class="custom-file">
+                        {{ change_profile_image_form.profile_image }}
+                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                
+              <!-- /.tab-content -->
+            </div><!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </section>
+</div>
+{% endblock content %}

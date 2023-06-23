@@ -1,0 +1,65 @@
+{% extends 'user_panel_inc/base.html' %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header border-transparent">
+
+
+      <div class="card-tools">
+*
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table m-0">
+          <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Total price</th>
+            <th>Status</th>
+            <th>Items</th>
+          </tr>
+          </thead>
+          <tbody>
+            
+            {% for order in orders %}
+            <tr>
+                <td><a href="pages/examples/invoice.html">{{ order.id }}</a></td>
+                <td>{{ order.total_price }}</td>
+                
+                {% if order.status == 'Delivered' %}
+                    <td><span class="badge badge-success">{{ order.status }}</span></td>
+                
+                {% elif order.status == 'In Progrssing' %}
+                    <td><span class="badge badge-primary">{{ order.status }}</span></td>
+
+                {% elif order.status == 'Returned' %}
+                    <td><span class="badge badge-warning">{{ order.status }}</span></td>
+
+                {% endif %}
+                    
+                <td>
+                  <div class="sparkbar" data-color="#00a65a" data-height="20">
+                    {% for item in order.items.all %}
+                        <samp>{{ item.product.title }},</samp>
+                    {% endfor %}
+                        
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+                
+
+          </tbody>
+        </table>
+      </div>
+      <!-- /.table-responsive -->
+    </div>
+    <!-- /.card-body -->
+
+    <!-- /.card-footer -->
+  </div>
+
+{% endblock content %}
