@@ -6,10 +6,16 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.timezone import now
 
 class Order(models.Model):
+    ORDER_STATUS = [
+        ('In Progrssing', 'جاری'),
+        ('Delivered', 'تکمیل شده'),
+        ('Returned', 'مرجوع شده'),
+    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     is_paid = models.BooleanField(default=False)
+    status = models.CharField(choices=ORDER_STATUS, max_length=130, default='In Progrssing')
 
     def __str__(self):
         return self.user.phone
@@ -58,10 +64,8 @@ class DiscountCode(models.Model):
             active=True,
         )
         if not coupon_qs.exists():
-            print(1)
             return None
         coupon = coupon_qs.first()
-        print(2)
         if coupon.allowed_for.exists() and user not in coupon.allowed_for.all():
             return None
         if coupon.quantity is not None:

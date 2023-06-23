@@ -60,6 +60,7 @@ class Product(models.Model):
         ProductImage, verbose_name='images', blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.BooleanField(default=False)
+    stock = models.BooleanField(default=True)
     category = models.ManyToManyField(Category, related_name='products')
     size = models.ManyToManyField(
         ProductSize, related_name='product_size', blank=True)

@@ -3,8 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
-from django.views.generic import FormView, View
+from django.views import generic
 
 from accounts.otp_service import OTP
 
@@ -12,22 +11,23 @@ from .forms import AddAddressForm, CheckOTPForm, LoginForm, RegisterForm
 from .models import User
 
 
-class UserLoginView(FormView):
-    template_name = 'accounts/login.html'
-    form_class = LoginForm
-    success_url = reverse_lazy('core:home')
+class UserLoginView(generic.View):
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'accounts/login.html', context={'form': form})
 
-    def form_valid(self, form):
-        data = form.cleaned_data
-        user = authenticate(username=data['username'], password=data['password'])
-        if  user is not None:
-            login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
-        else:
-            messages.add_message(self.request, messages.ERROR, 'your phone|email or password is worng')
-        return super().form_valid(form)
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            clean_data = form.cleaned_data
+            user = authenticate(username=clean_data['username'], password=clean_data['password'])
+            if  user is not None:
+                login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return redirect('core:home')
+        return render(request, 'accounts/login.html', context={'form': form})
+        
 
-
-class UserRegisterView(FormView):
+class UserRegisterView(generic.FormView):
     template_name = 'accounts/register.html'
     form_class = RegisterForm
 
@@ -40,7 +40,7 @@ class UserRegisterView(FormView):
         return redirect('accounts:check-otp')
 
 
-class CheckOTPView(View):
+class CheckOTPView(generic.View):
     form_class = CheckOTPForm
 
     def get(self, request):
@@ -56,7 +56,7 @@ class CheckOTPView(View):
             if data is None:
                 messages.add_message(request, messages.WARNING, 'this code not exist or invalid')
             try:
-                if otp_obj.verify_otp(otp=data['code'], email=data_cache['phone']):
+                if otp_obj.verify_otp(otp=data['code'], data=data_cache['phone']):
                     user = User.objects.create_user(phone=data_cache['phone'], email=data_cache['email'], full_name=data_cache['full_name'], password=data_cache['password'])
                     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                     return redirect('core:home')
@@ -67,13 +67,13 @@ class CheckOTPView(View):
         return render(request, 'accounts/check_otp.html', {'form': form})
 
 
-class LogoutView(LoginRequiredMixin, View):
+class LogoutView(LoginRequiredMixin, generic.View):
     def get(self, request):
         logout(request)
         return redirect('accounts:login')
 
 
-class AddAddressView(LoginRequiredMixin, View):
+class AddAddressView(LoginRequiredMixin, generic.View):
     def get(self, request):
         form = AddAddressForm()
         return render(request, 'accounts/add_address_form.html', context={'form': form})
