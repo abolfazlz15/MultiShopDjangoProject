@@ -15,9 +15,15 @@
           <div class="card card-primary card-outline">
             <div class="card-body box-profile">
               <div class="text-center">
-                <img class="profile-user-img img-fluid img-circle"
-                     src="{{ request.user.profile_image.url }}"
-                     alt="User profile picture">
+                
+                {% if request.user.profile_image %}
+                  <img class="profile-user-img img-fluid img-circle"
+                  src="{{ request.user.profile_image.url }}"
+                  alt="User profile picture">
+                {% else %}
+                  <img src="{% static 'img/user.jpg' %}" alt="{{ request.user.full_name }}" class="profile-user-img img-fluid img-circle">
+                {% endif %}
+                  
               </div>
 
               <h3 class="profile-username text-center">{{ request.user.full_name }}</h3>
