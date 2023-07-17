@@ -58,7 +58,7 @@ class Product(models.Model):
         blank=True, null=True, upload_to=get_file_path)
     image = models.ManyToManyField(
         ProductImage, verbose_name='images', blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.IntegerField()
     status = models.BooleanField(default=False)
     stock = models.BooleanField(default=True)
     category = models.ManyToManyField(Category, related_name='products')

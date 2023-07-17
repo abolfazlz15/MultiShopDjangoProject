@@ -1,9 +1,8 @@
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
-from django.views.decorators.cache import cache_page
 
-from product.models import Category, Comment, FavoriteProduct, Product
+from product.models import Category, Comment, Product
 
 
 class ProductDetailView(generic.DetailView):
@@ -33,7 +32,6 @@ class ProductDetailView(generic.DetailView):
         return redirect('product:product-detail', self.get_object().id, self.get_object().slug)
 
 
-
 class ProductListView(generic.ListView):
     template_name = 'product/product_list.html'
     model = Product
@@ -44,6 +42,28 @@ class ProductListView(generic.ListView):
         objects = super(ProductListView, self).get_queryset(*args, **kwargs)
         objects = objects.order_by("-id")
         return objects
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        request = self.request  
+        colors = request.GET.getlist('color')
+        sizes = request.GET.getlist('size')
+        min_price = request.GET.get('min_price')
+        max_price = request.GET.get('max_price')
+        queryset = Product.objects.filter(status=True)
+
+        if colors or sizes:
+            queryset = queryset.filter(Q(color__tilte__in=colors) |
+                                            Q(size__tilte__in=sizes) ).distinct()
+
+        if min_price:
+            queryset = queryset.filter(price__gte=min_price)
+
+        if max_price:
+            queryset = queryset.filter(price__lte=max_price)
+   
+        context['products'] = queryset
+        return context
 
 
 class SearchProductView(generic.ListView):
