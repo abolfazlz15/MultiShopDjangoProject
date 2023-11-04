@@ -63,9 +63,9 @@ class Product(models.Model):
     stock = models.BooleanField(default=True)
     category = models.ManyToManyField(Category, related_name='products')
     size = models.ManyToManyField(
-        ProductSize, related_name='product_size', blank=True)
+        ProductSize, related_name='product_size')
     color = models.ManyToManyField(
-        ProductColor, related_name='product_color', blank=True)
+        ProductColor, related_name='product_color')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     is_status = ProductManger

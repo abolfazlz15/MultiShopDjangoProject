@@ -44,7 +44,7 @@
 
                                 {% for size in product.size.all %}
                                     <div class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" class="custom-control-input" value="{{ size }}" id="{{ size }}" name="size">
+                                        <input type="radio" class="custom-control-input" value="{{ size }}" id="{{ size }}" name="size" required>
                                         <label class="custom-control-label" for="{{ size }}">{{ size }}</label>
                                     </div>
                                 {% endfor %}
@@ -57,7 +57,7 @@
 
                             {% for color in product.color.all %}
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input" value="{{ color }}" id="{{ color }}" name="color">
+                                    <input type="radio" class="custom-control-input" value="{{ color }}" id="{{ color }}" name="color" required>
                                     <label class="custom-control-label" for="{{ color }}">{{ color }}</label>
                                 </div>
                             {% endfor %}
