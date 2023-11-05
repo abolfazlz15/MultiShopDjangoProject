@@ -22,7 +22,7 @@ class UserLoginView(AnonymousRequiredMixin, generic.View):
         if form.is_valid():
             clean_data = form.cleaned_data
             user = authenticate(username=clean_data['username'], password=clean_data['password'])
-            if  user is not None:
+            if user is not None:
                 login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('core:home')
         return render(request, 'accounts/login.html', context={'form': form})
@@ -35,8 +35,8 @@ class UserRegisterView(AnonymousRequiredMixin, generic.FormView):
     def form_valid(self, form):
         data = form.cleaned_data
         otp_service = OTP()
-        otp_service.generate_otp(data['phone'])
-        cache.set(key='register', value={'phone': data['phone'], 'email': data['email'], 'password': data['password'],
+        otp_code = otp_service.generate_otp(data['phone'])
+        cache.set(key=otp_code, value={'phone': data['phone'], 'email': data['email'], 'password': data['password'],
                                          'full_name': data['full_name']}, timeout=300)
         return redirect('accounts:check-otp')
 
@@ -52,7 +52,7 @@ class CheckOTPView(AnonymousRequiredMixin, generic.View):
         form = self.form_class(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            data_cache = cache.get(key='register')
+            data_cache = cache.get(key=data['code'])
             otp_obj = OTP()
             if data is None:
                 messages.add_message(request, messages.WARNING, 'this code not exist or invalid')
