@@ -1,7 +1,7 @@
 import os
 from os import path
 from pathlib import Path
-
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -131,5 +131,13 @@ AUTHENTICATION_BACKENDS = [
     'accounts.authentication.EmailAuthenticateBackend',
 ]
 
-# session settings
+# Session settings
 CART_SESSION_ID = 'cart'
+
+# Email config
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
