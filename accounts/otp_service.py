@@ -1,5 +1,6 @@
 import datetime
 from random import randint
+import re
 
 from django.core.cache import cache
 from django.core.mail import EmailMessage
@@ -7,14 +8,19 @@ from django.template.loader import render_to_string
 
 
 class OTP:
-
-    def __init__(self):
-        self.otp_expiry_minutes = 1
+    otp_expiry_minutes = 1
 
     def generate_otp(self, data):
         otp = randint(1000, 9999)
-        cache.set(data, (otp, datetime.datetime.now()), self.otp_expiry_minutes * 60)        
-        print(otp)
+        if re.match(r'[^@]+@[^@]+\.[^@]+', data):
+            self.send_otp_with_email(otp, data)
+        elif re.match(r'\d{10}', data):
+            self.send_otp_with_phone(otp, data)
+        else:
+            return False
+
+        cache.set(data, (otp, datetime.datetime.now()),
+                  self.otp_expiry_minutes * 60)
         return otp
 
     def verify_otp(self, otp, data):
@@ -36,15 +42,17 @@ class OTP:
     def clear_otp(self, data):
         cache.delete(data)
 
-    def send_otp(self, otp, email):
-        pass
-        # mail_subject = 'فعال سازی اکانت'
-        # message = render_to_string('accounts/active_email.html', {
-        #     'user': email,
-        #     'code': otp,
-        # })
-        # to_email = email
-        # email = EmailMessage(
-        #     mail_subject, message, to=[to_email]
-        # )
-        # email.send()
+    def send_otp_with_email(self, otp, email):
+        mail_subject = 'فعال سازی اکانت'
+        message = render_to_string('accounts/active_email.html', {
+            'user': email,
+            'code': otp,
+        })
+        to_email = email
+        email = EmailMessage(
+            mail_subject, message, to=[to_email]
+        )
+        email.send()
+
+    def send_otp_with_phone(self, otp, phone):
+        print(otp) # this is just for test

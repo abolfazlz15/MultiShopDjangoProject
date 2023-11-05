@@ -55,7 +55,6 @@ class SubmitDiscountCodeView(LoginRequiredMixin, View):
         code = request.POST.get('discount_code')
         order = get_object_or_404(Order, id=pk)
         discount_code = DiscountCode.get(code, request.user)
-        print(discount_code)
         if discount_code is None:
             messages.error(
                 request,
