@@ -6,17 +6,17 @@ from .managers import UserManager
 
 
 class User(PermissionsMixin, AbstractBaseUser):
-    phone = models.CharField(max_length=11, unique=True, verbose_name='شماره تلفن')
+    phone = models.CharField(max_length=11, unique=True, verbose_name='phone number')
     email = models.EmailField(
-        verbose_name='ایمیل',
+        verbose_name='email',
         max_length=255,
         null=True, blank=True,
         unique=True,
     )
-    full_name = models.CharField(max_length=40, null=True, blank=True, verbose_name='نام کامل')
-    profile_image = models.ImageField(null=True, blank=True, upload_to='user_profile_image', verbose_name='عکس پروفایل')
-    is_active = models.BooleanField(default=True, verbose_name='کاربر فعال')
-    is_admin = models.BooleanField(default=False, verbose_name='کارمند')
+    full_name = models.CharField(max_length=40, null=True, blank=True, verbose_name='fullname')
+    profile_image = models.ImageField(null=True, blank=True, upload_to='user_profile_image', verbose_name='profile image')
+    is_active = models.BooleanField(default=True, verbose_name='avtive user')
+    is_admin = models.BooleanField(default=False, verbose_name='staff user')
 
     objects = UserManager()
 
@@ -24,8 +24,8 @@ class User(PermissionsMixin, AbstractBaseUser):
     REQUIRED_FIELDS = ['email', 'full_name']
 
     class Meta:
-        verbose_name = 'کاربر'
-        verbose_name_plural = 'کاربران'
+        verbose_name = 'user'
+        verbose_name_plural = 'users'
 
     def __str__(self):
         return self.phone
@@ -47,19 +47,12 @@ class User(PermissionsMixin, AbstractBaseUser):
         if self.profile_image:
             return format_html(f'<img src="{self.profile_image.url}" alt="" width="50px" height="50px">')
         else:
-            return format_html('پروفایل ندارد')
+            return format_html('there is no profile image')
 
-    showImage.short_description = 'عکس پروفایل'
+    showImage.short_description = 'there is no profile image'
 
 
 
-class OTPCode(models.Model):
-    phone = models.CharField(max_length=11)
-    code = models.SmallIntegerField()
-    expiration_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.phone
 
 
 

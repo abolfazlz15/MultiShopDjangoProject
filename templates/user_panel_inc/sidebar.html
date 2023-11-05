@@ -6,9 +6,7 @@
   <div class="sidebar">
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-        <img src="{% if request.user.image_profile %}{{ request.user.user.profile_image.url }}{% else %}{% static 'user_panel/dist/img/default-150x150.html' %}{% endif %}" class="img-circle elevation-2" alt="User Image">
-      </div>
+
       <div class="info">
         <a href="#" class="d-block">{{ request.user.full_name }}</a>
       </div>
@@ -53,7 +51,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'user_panel:order_list' %}" class="nav-link">
+          <a href="{% url 'accounts:logout' %}" class="nav-link">
             <i class="nav-icon fa fa-sign-out"></i>
             <p>
               Logout
