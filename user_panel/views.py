@@ -93,7 +93,7 @@ class UserProfileView(LoginRequiredMixin, generic.View):
         return render(request, 'user_panel/user_profile.html', context)
 
 
-class ConfirmNewPhoneView(generic.View):
+class ConfirmNewPhoneView(LoginRequiredMixin, generic.View):
     def get(self, request):
         form = forms.ConfirmNewPhoneForm()
         return render(request, 'user_panel/confirm_new_phone.html', context={'form': form})
@@ -123,7 +123,7 @@ class ConfirmNewPhoneView(generic.View):
         return render(request, 'user_panel/confirm_new_phone.html', context={'form': form})
 
 
-class ConfirmNewEmailView(generic.View):
+class ConfirmNewEmailView(LoginRequiredMixin, generic.View):
     def get(self, request):
         form = forms.ConfirmNewEmailFor()
         return render(request, 'user_panel/confirm_new_email.html', context={'form': form})

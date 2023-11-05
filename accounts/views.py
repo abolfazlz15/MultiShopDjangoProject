@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.views import generic
+from accounts.mixins import AnonymousRequiredMixin
 
 from accounts.otp_service import OTP
 
@@ -11,7 +12,7 @@ from .forms import AddAddressForm, CheckOTPForm, LoginForm, RegisterForm
 from .models import User
 
 
-class UserLoginView(generic.View):
+class UserLoginView(AnonymousRequiredMixin, generic.View):
     def get(self, request):
         form = LoginForm()
         return render(request, 'accounts/login.html', context={'form': form})
@@ -27,7 +28,7 @@ class UserLoginView(generic.View):
         return render(request, 'accounts/login.html', context={'form': form})
         
 
-class UserRegisterView(generic.FormView):
+class UserRegisterView(AnonymousRequiredMixin, generic.FormView):
     template_name = 'accounts/register.html'
     form_class = RegisterForm
 
@@ -40,7 +41,7 @@ class UserRegisterView(generic.FormView):
         return redirect('accounts:check-otp')
 
 
-class CheckOTPView(generic.View):
+class CheckOTPView(AnonymousRequiredMixin, generic.View):
     form_class = CheckOTPForm
 
     def get(self, request):
