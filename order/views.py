@@ -42,11 +42,17 @@ class OrderDetaiView(LoginRequiredMixin, View):
 class OrderCreationView(LoginRequiredMixin, View):
     def get(self, request):
         cart = Cart(request)
+        if not dict(cart.session['cart']):
+            messages.error(
+                request,
+                'There are no products',
+                'danger',
+            )
+            return redirect('order:cart-detail')
         order = Order.objects.create(user=request.user, total_price=cart.total())
         for item in cart:
             OrderItem.objects.create(order=order, product=item['product'], color=item['color'], size=item['size'],
                                      quantity=item['quantity'], price=item['price'])
-
         return redirect('order:order-detail', order.id)
 
 
@@ -58,7 +64,7 @@ class SubmitDiscountCodeView(LoginRequiredMixin, View):
         if discount_code is None:
             messages.error(
                 request,
-                "This coupon does not exists!",
+                'This coupon does not exists!',
                 'danger',
             )
             return redirect('order:order-detail', order.id)

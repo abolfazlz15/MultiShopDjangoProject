@@ -17,14 +17,12 @@ class Cart(object):
     def __iter__(self):
         cart = self.cart.copy()
 
-
         for item in cart.values():
             item['product'] = Product.objects.get(id=int(item['id']))
             item['total_price'] = Decimal(item['price']) * item['quantity']
-            item['unique_id'] = self.unique_id_generator(item['product'].id, item['color'], item['size'])
+            item['unique_id'] = self.unique_id_generator(
+                item['product'].id, item['color'], item['size'])
             yield item
-
-   
 
     def clear(self):
         del self.session[CART_SESSION_ID]
@@ -38,7 +36,8 @@ class Cart(object):
         unique = self.unique_id_generator(product.id, color, size)
 
         if unique not in self.cart:
-            self.cart[unique] = {'quantity': 0, 'price': str(product.price), 'color': color, 'size': size, 'id': str(product.id)}
+            self.cart[unique] = {'quantity': 0, 'price': str(
+                product.price), 'color': color, 'size': size, 'id': str(product.id)}
 
         self.cart[unique]['quantity'] += int(quantity)
         self.save()
@@ -55,5 +54,5 @@ class Cart(object):
         cart = self.cart.values()
         total = 0
         for item in cart:
-            total +=  Decimal(item['price']) * item['quantity']
-        return total     
+            total += Decimal(item['price']) * item['quantity']
+        return total
