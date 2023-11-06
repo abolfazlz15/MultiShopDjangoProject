@@ -8,7 +8,7 @@
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
       <div class="info">
-        <a href="#" class="d-block">{{ request.user.full_name }}</a>
+        <a href="{% url 'core:home' %}" class="d-block">back to store</a>
       </div>
     </div>
 
@@ -46,7 +46,7 @@
           <a href="{% url 'user_panel:favorite_product_list' %}" class="nav-link">
             <i class="nav-icon fa fa-heart"></i>
             <p>
-              My faivoite orders
+              My faivoite products
             </p>
           </a>
         </li>
