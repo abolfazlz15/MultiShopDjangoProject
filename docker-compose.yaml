@@ -1,0 +1,32 @@
+
+services:
+  app:
+    container_name: multi_shop
+    build: .
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code/
+      - static:/usr/src/app/static
+      - media:/usr/src/app/medias
+    depends_on:
+      - db
+    
+  db:
+    image: postgres:15.5-alpine3.17
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=multi_shop_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DATABASE-HOST=db
+      - DATABASE-PORT=5432
+
+volumes:
+  postgres:
+  static:
+  media:

@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-f(j5db@ldgrhl+x&x#!&&lv#lvsm&dsj_r$yquk2ecg71n^5)x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -77,24 +77,17 @@ WSGI_APPLICATION = 'MultiShopDjango.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-if config('ENGINE') == 'sqlite3':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite',
-        }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DATABASE-NAME', 'multi_shop_db'),
+        'USER': os.environ.get('DATABASE-USER', 'postgres'),
+        'PASSWORD': os.environ.get('DATABASE-PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DATABASE-HOST', 'db'),
+        'PORT': os.environ.get('DATABASE-PORT', '5432'),
     }
-elif config('ENGINE') == 'postgres':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': config('NAME_DB'), 
-            'USER': config('USER_DB'),
-            'PASSWORD': config('PASSWORD_DB'),
-            'HOST': config('HOST_DB'), 
-            'PORT': config('PORT_DB'),
-        }
-    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
