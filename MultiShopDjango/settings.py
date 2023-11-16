@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': os.environ.get('DATABASE-NAME', 'multi_shop_db'),
         'USER': os.environ.get('DATABASE-USER', 'postgres'),
         'PASSWORD': os.environ.get('DATABASE-PASSWORD', 'postgres'),
-        'HOST': os.environ.get('DATABASE-HOST', 'db'),
+        'HOST': os.environ.get('DATABASE-HOST', 'db'), # Or an IP Address that your DB is hosted on
         'PORT': os.environ.get('DATABASE-PORT', '5432'),
     }
 }
