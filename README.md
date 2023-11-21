@@ -11,7 +11,7 @@ This is a e-commerce shop with Django
 - cd `/MultiShopDjangoProject` Where the docker-compose.yaml is
 - In terminal: `python -m venv venv`
 - activate your venv: in windows `cd venv\scripts\activate` in linux: `venv/bin/activate`
-- Run `pip install requirements.txt`
+- Run `pip install -r requirements.txt`
 - Run `python manage.py collectstatic`
 - Run `python manage.py runserver`
 
